@@ -10,8 +10,14 @@ CREATE TABLE users  (
 CREATE TABLE cards (
     userOWN INT NOT NULL,
     setID INT  AUTO_INCREMENT PRIMARY KEY,
-    term1 VARCHAR(140) NOT NULL,
-    term2 VARCHAR(200) NOT NULL,
     FOREIGN KEY (userOWN)
         REFERENCES users (uID)
+);
+
+CREATE TABLE terms (
+    setID INT NOT NULL,
+    term1 VARCHAR(140) NOT NULL,
+    term2 VARCHAR(200) NOT NULL,
+    FOREIGN KEY (setID)
+        REFERENCES cards (setID)
 );
