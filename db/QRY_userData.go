@@ -16,7 +16,7 @@ func main()  {
 
     errCon := db.Ping()
     checkError(errCon)
-    rows, err := db.Query("SELECT * FROM users WHERE uID=1")
+    rows, err := db.Query("SELECT * FROM users WHERE uID=?", uID)
     checkError(err)
     for rows.Next(){
       var uID int
