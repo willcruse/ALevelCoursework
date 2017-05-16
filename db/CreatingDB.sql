@@ -10,6 +10,7 @@ CREATE TABLE users  (
 CREATE TABLE cards (
     userOWN INT NOT NULL,
     setID INT  AUTO_INCREMENT PRIMARY KEY,
+    setName VARCHAR(50),
     FOREIGN KEY (userOWN)
         REFERENCES users (uID)
 );
