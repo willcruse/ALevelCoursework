@@ -1,4 +1,4 @@
-package main
+package dbOpertations
 
 import (
 	"database/sql"
@@ -7,9 +7,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var db *sql.DB
-
 func main() {
+	var db *sql.DB
 	email := "somemail@address.com"
 	uName := "theREALguy"
 	pw := "UNHACKABLE"

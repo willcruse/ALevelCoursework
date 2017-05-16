@@ -1,4 +1,4 @@
-package main
+package dbOpertations
 
 import (
 	"database/sql"
@@ -7,10 +7,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var db *sql.DB
-var uID int
+
 
 func main() {
+	var db *sql.DB
+	var uID int
 	term1 := "Hello"
 	term2 := "world"
 	term3 := "print"
