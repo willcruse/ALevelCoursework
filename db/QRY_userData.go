@@ -1,38 +1,30 @@
-package dbOpertations
+package dbOperations
 
 import (
 	"database/sql"
-	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func main() {
+func userData(uID int) []string {
 	var db *sql.DB
-	var uID = 1
-	db, err := sql.Open("mysql", "root:roottoor@/educationWebsite")
+	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
-
 	errCon := db.Ping()
 	checkError(errCon)
 	rows, err := db.Query("SELECT * FROM users WHERE uID=?", uID)
 	checkError(err)
+	var data []string
 	for rows.Next() {
-		var uID int
 		var email string
 		var uName string
 		var pw string
-		err = rows.Scan(&uID, &email, &uName, &pw)
-		fmt.Println(uID)
-		fmt.Println(email)
-		fmt.Println(uName)
-		fmt.Println(pw)
-	}
-}
+		err = rows.Scan(&email, &uName, &pw)
+		data = append(data, email)
+		data = append(data, uName)
+		data = append(data, pw)
 
-func checkError(err error) {
-	if err != nil {
-		panic(err)
 	}
+	return data
 }

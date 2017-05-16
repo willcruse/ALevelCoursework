@@ -1,4 +1,4 @@
-package dbOpertations
+package dbOperations
 
 import (
 	"database/sql"
@@ -7,11 +7,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func main() {
+func newUser(email, uName, pw string) {
 	var db *sql.DB
-	email := "somemail@address.com"
-	uName := "theREALguy"
-	pw := "UNHACKABLE"
 	db, err := sql.Open("mysql", "will:somePass@/educationWebsite") //will:somePass   root:roottoor
 	checkError(err)
 	defer db.Close()
@@ -26,8 +23,4 @@ func main() {
 	fmt.Println("Rows:", affect)
 }
 
-func checkError(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
+
