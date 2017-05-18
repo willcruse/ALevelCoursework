@@ -6,6 +6,10 @@ import (
 	"github.com/ComputingCoursework/dbOperations"
 )
 
+func homePage(res http.ResponseWriter, req *http.Request) {
+	http.ServeFile(res, req, "index.html")
+}
+
 func setsPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "sets.html")
@@ -20,7 +24,13 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 	http.ServeFile(res, req, "success.html")
 }
 
+func termsPage(res http.ResponseWriter, req *http.Request) {
+	//NEW CODE HERE
+}
+
 func main() {
-	http.HandleFunc("/", setsPage)
+	http.HandleFunc("/", homePage)
+	http.HandleFunc("/setsPage", setsPage)
+	http.HandleFunc("/termsPage", termsPage)
 	http.ListenAndServe(":8080", nil)
 }
