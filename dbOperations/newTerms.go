@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"fmt"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" //JUSTIFIED
 )
 
-func NewTerm(term1, term2 string, setID int) { //Function to make new terms in db
+func NewTerm(term1, term2 string, setID int64) { //Function to make new terms in db
 	var db *sql.DB
 	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
 	checkError(err)

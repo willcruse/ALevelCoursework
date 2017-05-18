@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func NewSet(setName string, uID int) { //function to create a new set
+func NewSet(setName string, uID int) int64 { //function to create a new set
 	var db *sql.DB
 	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
 	checkError(err)
@@ -19,4 +19,7 @@ func NewSet(setName string, uID int) { //function to create a new set
 	res, err := stmtC.Exec(setName)
 	checkError(err)
 	fmt.Println(res)
+	lastID, err := res.LastInsertId()
+	checkError(err)
+	return lastID
 }
