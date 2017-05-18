@@ -9,11 +9,12 @@ import (
 
 func newUser(email, uName, pw string) {
 	var db *sql.DB
-	db, err := sql.Open("mysql", "will:somePass@/educationWebsite") //will:somePass   root:roottoor
+	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
 	checkError(errCon)
+	checkError(err)
 	stmt, err := db.Prepare("INSERT INTO users (email, uName, pw) VALUES(?, ?, ?)")
 	checkError(err)
 	res, err := stmt.Exec(email, uName, pw)
@@ -22,5 +23,3 @@ func newUser(email, uName, pw string) {
 	checkError(err)
 	fmt.Println("Rows:", affect)
 }
-
-

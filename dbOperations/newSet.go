@@ -14,6 +14,7 @@ func NewSet(setName string, uID int) int64 { //function to create a new set
 	defer db.Close()
 	errCon := db.Ping()
 	checkError(errCon)
+	checkError(err)
 	stmtC, err := db.Prepare("INSERT INTO cards (userOwn, setName) VALUES(3, ?)")
 	checkError(err)
 	res, err := stmtC.Exec(setName)

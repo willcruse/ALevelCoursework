@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ComputingCoursework/dbOperations"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func homePage(res http.ResponseWriter, req *http.Request) {
@@ -25,7 +26,16 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 }
 
 func termsPage(res http.ResponseWriter, req *http.Request) {
-	//NEW CODE HERE
+	if req.Method != "POST" {
+		http.ServeFile(res, req, "termsPage.html")
+		return
+	}
+	setName := req.FormValue("setName")
+	termA := req.FormValue("termA")
+	termB := req.FormValue("termB")
+	setID := db.
+		dbOperations.NewTerm(termA, termB, setID)
+	http.ServeFile(res, req, "success.html")
 }
 
 func main() {
