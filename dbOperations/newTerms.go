@@ -25,6 +25,7 @@ func NewTerm(term1, term2 string, setID int64) { //Function to make new terms in
 func TermsExisting(term1, term2, setName string) {
 	var db *sql.DB
 	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
+	var setID int
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
@@ -32,5 +33,9 @@ func TermsExisting(term1, term2, setName string) {
 	checkError(err)
 	rows, err := db.Query("SELECT setID FROM cards WHERE setName = ?", setName)
 	checkError(err)
+	for rows.Next() {
+		err := rows.Scan(&setID)
+		checkError(err)
+	}
 
 }

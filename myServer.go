@@ -33,8 +33,7 @@ func termsPage(res http.ResponseWriter, req *http.Request) {
 	setName := req.FormValue("setName")
 	termA := req.FormValue("termA")
 	termB := req.FormValue("termB")
-	setID := db.
-		dbOperations.NewTerm(termA, termB, setID)
+	dbOperations.TermsExisting(termA, termB, setName)
 	http.ServeFile(res, req, "success.html")
 }
 
