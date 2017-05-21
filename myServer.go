@@ -22,7 +22,7 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 	termB := req.FormValue("termB")
 	setID := dbOperations.NewSet(setName, uID)
 	dbOperations.NewTerm(termA, termB, setID)
-	http.ServeFile(res, req, "success.html")
+	http.ServeFile(res, req, "sets.html")
 }
 
 func termsPage(res http.ResponseWriter, req *http.Request) {
@@ -34,7 +34,7 @@ func termsPage(res http.ResponseWriter, req *http.Request) {
 	termA := req.FormValue("termA")
 	termB := req.FormValue("termB")
 	dbOperations.TermsExisting(termA, termB, setName)
-	http.ServeFile(res, req, "success.html")
+	http.ServeFile(res, req, "termsPage.html")
 }
 
 func main() {
