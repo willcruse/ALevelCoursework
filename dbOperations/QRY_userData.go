@@ -6,7 +6,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func userData(uID int) []string {
+func userDataUID(uID int) []string {
 	var db *sql.DB
 	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
 	checkError(err)
@@ -25,6 +25,29 @@ func userData(uID int) []string {
 		data = append(data, uName)
 		data = append(data, pw)
 
+	}
+	return data
+}
+
+func UserDataUname(uName string) []string {
+	var db *sql.DB
+	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
+	checkError(err)
+	defer db.Close()
+	errCon := db.Ping()
+	checkError(errCon)
+	rows, err := db.Query("SELECT uID, pw FROM users WHERE uName=?", uName)
+	if err == sql.ErrNoRows {
+		var data []string
+		return data
+	}
+	var data []string
+	for rows.Next() {
+		var uName string
+		var pw string
+		err = rows.Scan(&uName, &pw)
+		data = append(data, uName)
+		data = append(data, pw)
 	}
 	return data
 }
