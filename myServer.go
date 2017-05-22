@@ -35,19 +35,19 @@ func termsPage(res http.ResponseWriter, req *http.Request) {
 	dbOperations.TermsExisting(termA, termB, setName)
 	http.ServeFile(res, req, "termsPage.html")
 }
+
 func loginPage(res http.ResponseWriter, req *http.Request) {
 	var data []string
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "loginPage.html")
 		return
 	}
-	uName := req.FormValue("userName")
+	userName := req.FormValue("userName")
 	pw := req.FormValue("pw")
-	data = dbOperations.UserDataUname(uName)
+	data = dbOperations.UserDataUname(userName)
 	if len(data) == 0 {
-		http.ServeFile(res, req, "index.html")
-	}
-	if pw == data[1] {
+		http.ServeFile(res, req, "signUpPage.html")
+	} else if pw == data[1] {
 		http.ServeFile(res, req, "sets.html")
 	} else {
 		http.ServeFile(res, req, "index.html")
@@ -57,11 +57,13 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 func signUpPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "signUpPage.html")
+		return
 	}
-	uName := req.FormValue("uName")
+	uName := req.FormValue("userName")
 	pw := req.FormValue("pw")
 	email := req.FormValue("email")
 	dbOperations.NewUser(email, uName, pw)
+	http.ServeFile(res, req, "loginPage.html")
 }
 
 func main() {

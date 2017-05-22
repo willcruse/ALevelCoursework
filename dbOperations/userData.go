@@ -2,6 +2,7 @@ package dbOperations
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -37,6 +38,7 @@ func UserDataUname(uName string) []string {
 	errCon := db.Ping()
 	checkError(errCon)
 	rows, err := db.Query("SELECT uID, pw FROM users WHERE uName=?", uName)
+	fmt.Println(err)
 	if err == sql.ErrNoRows {
 		var data []string
 		return data
