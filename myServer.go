@@ -56,7 +56,7 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 
 func signUpPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
-		http.ServeFile(res, req, "signup.html")
+		http.ServeFile(res, req, "signUpPage.html")
 	}
 	uName := req.FormValue("uName")
 	pw := req.FormValue("pw")
