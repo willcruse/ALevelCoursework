@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func newUser(email, uName, pw string) {
+func NewUser(email, uName, pw string) {
 	var db *sql.DB
 	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
 	checkError(err)
