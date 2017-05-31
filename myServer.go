@@ -37,11 +37,11 @@ func termsPage(res http.ResponseWriter, req *http.Request) {
 }
 
 func loginPage(res http.ResponseWriter, req *http.Request) {
-	var data []string
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "loginPage.html")
 		return
 	}
+	var data []string
 	userName := req.FormValue("userName")
 	pw := req.FormValue("pw")
 	data = dbOperations.UserDataUname(userName)
