@@ -6,6 +6,17 @@ import (
 	"github.com/ComputingCoursework/dbOperations"
 )
 
+//Main Function
+func main() {
+	http.HandleFunc("/", homePage)
+	http.HandleFunc("/setsPage", setsPage)
+	http.HandleFunc("/termsPage", termsPage)
+	http.HandleFunc("/login", loginPage)
+	http.HandleFunc("/signup", signUpPage)
+	http.ListenAndServe(":8080", nil)
+}
+
+//Page Functions
 func homePage(res http.ResponseWriter, req *http.Request) {
 	http.ServeFile(res, req, "index.html")
 }
@@ -16,6 +27,9 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	uID := 2
+	if uID != -1 {
+
+	}
 	setName := req.FormValue("setName")
 	termA := req.FormValue("termA")
 	termB := req.FormValue("termB")
@@ -66,11 +80,23 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 	http.ServeFile(res, req, "loginPage.html")
 }
 
-func main() {
-	http.HandleFunc("/", homePage)
-	http.HandleFunc("/setsPage", setsPage)
-	http.HandleFunc("/termsPage", termsPage)
-	http.HandleFunc("/login", loginPage)
-	http.HandleFunc("/signup", signUpPage)
-	http.ListenAndServe(":8080", nil)
+//HTML funcs
+
+func generateNewTable(rowStrings [][]string) string {
+	htmlOutput := "<table>"
+	for i := 0; i < len(rowStrings)-1; i++ {
+		htmlOutput += newRow(rowStrings[i])
+	}
+	htmlOutput += "</table>"
+	return htmlOutput
+}
+
+func newRow(a []string) string {
+	var k string
+	k += "<tr>"
+	for i := 0; i < len(a)-1; i++ {
+		k += "<th>" + a[i] + "</th>"
+	}
+	k += "</tr>"
+	return k
 }
