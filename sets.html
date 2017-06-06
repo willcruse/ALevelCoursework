@@ -1,14 +1,24 @@
 <html>
-    <head>
-        <title>Set Page</title>
-    </head>
-    <body style="background-color: #3f9fde;">
-        <h2>My Sets</h2>
-        <form method="POST" action="/setsPage">
-            <input type="text" name="setName" placeholder="setName">
-            <input type="text" name="termA" placeholder="termA">
-            <input type="text" name="termB" placeholder="termB">
-            <input type="submit" value="SetsPage">
-        </form>
-    </body>
+
+<head>
+    <title>Set Page</title>
+    <script src="Scripts/setsTable.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        var uID =
+            $("#mySetsTable").append($.post("/getSetData", ));
+    </script>
+</head>
+
+<body style="background-color: #3f9fde;" onload="getTableData()">
+    <h2>My Sets</h2>
+    <table id="mySetsTable"></table>
+    <form method="POST" action="/setsPage">
+        <input type="text" name="setName" placeholder="setName">
+        <input type="text" name="termA" placeholder="termA">
+        <input type="text" name="termB" placeholder="termB">
+        <input type="submit" value="SetsPage">
+    </form>
+</body>
+
 </html>

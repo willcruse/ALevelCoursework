@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ComputingCoursework/dbOperations"
+	"github.com/ComputingCoursework/htmlOperations"
 )
 
 //Main Function
@@ -28,7 +29,7 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 	}
 	uID := 2
 	if uID != -1 {
-
+		htmlOperations.GenerateNewTable()
 	}
 	setName := req.FormValue("setName")
 	termA := req.FormValue("termA")
@@ -78,25 +79,4 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 	email := req.FormValue("email")
 	dbOperations.NewUser(email, uName, pw)
 	http.ServeFile(res, req, "loginPage.html")
-}
-
-//HTML funcs
-
-func generateNewTable(rowStrings [][]string) string {
-	htmlOutput := "<table>"
-	for i := 0; i < len(rowStrings)-1; i++ {
-		htmlOutput += newRow(rowStrings[i])
-	}
-	htmlOutput += "</table>"
-	return htmlOutput
-}
-
-func newRow(a []string) string {
-	var k string
-	k += "<tr>"
-	for i := 0; i < len(a)-1; i++ {
-		k += "<th>" + a[i] + "</th>"
-	}
-	k += "</tr>"
-	return k
 }
