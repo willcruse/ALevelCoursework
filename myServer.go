@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/ComputingCoursework/dbOperations"
-	"github.com/ComputingCoursework/htmlOperations"
+	"github.com/willcruse/ComputingCoursework/dbOperations"
+	"github.com/willcruse/ComputingCoursework/htmlOperations"
 )
 
 //Main Function
