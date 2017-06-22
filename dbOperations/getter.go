@@ -24,14 +24,14 @@ func GetSets(uID int) []string {
 	return data
 }
 
-func GetTerms(setName string) [][]string {
+func GetTerms(setName string, uID int) [][]string {
 	var db *sql.DB
 	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
 	checkError(errCon)
-	rows, err := db.Query("SELECT setID FROM cards WHERE setName=?", setName)
+	rows, err := db.Query("SELECT setID FROM cards WHERE setName=? AND userOwn=?", setName, uID)
 	checkError(err)
 	var setID int
 	err = rows.Scan(&setID)
