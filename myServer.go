@@ -29,7 +29,7 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 	}
 	uID := 2
 	if uID != -1 {
-		htmlOperations.GenerateNewTable()
+		htmlOperations.GenerateNewTable(uID)
 	}
 	setName := req.FormValue("setName")
 	termA := req.FormValue("termA")

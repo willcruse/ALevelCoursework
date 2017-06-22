@@ -1,20 +1,14 @@
 package htmlOperations
 
-func GenerateNewTable(rowStrings [][]string) string {
-	htmlOutput := "<table>"
+import "github.com/willcruse/ComputingCoursework/dbOperations"
+
+func GenerateNewTable(uID, operation int, setName string) string {
+	rowStrings := dbOperations.GetSets(uID)
+	htmlOutput := "<table><tr><th>Sets</th></tr>"
+
 	for i := 0; i < len(rowStrings)-1; i++ {
-		htmlOutput += newRow(rowStrings[i])
+		htmlOutput += "<tr><td>" + rowStrings[i] + "</td></tr>"
 	}
 	htmlOutput += "</table>"
 	return htmlOutput
-}
-
-func newRow(a []string) string {
-	var k string
-	k += "<tr>"
-	for i := 0; i < len(a)-1; i++ {
-		k += "<th>" + a[i] + "</th>"
-	}
-	k += "</tr>"
-	return k
 }
