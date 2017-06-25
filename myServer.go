@@ -29,11 +29,7 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 	}
 	uID := 2
 	if uID != -1 {
-<<<<<<< Updated upstream
 		htmlOperations.GenerateNewTable(uID)
-=======
-		htmlOperations.GenerateNewTable(dbOperations.GetSets(uID))
->>>>>>> Stashed changes
 	}
 	setName := req.FormValue("setName")
 	termA := req.FormValue("termA")
@@ -44,6 +40,7 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 }
 
 func termsPage(res http.ResponseWriter, req *http.Request) {
+	uID := 4
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "termsPage.html")
 		return
