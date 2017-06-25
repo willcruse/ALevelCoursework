@@ -34,4 +34,5 @@ func NewSet(setName string, uID int) int64 { //function to create a new set
 		return setID
 	}
 	fmt.Println(noRows) //If error prints it
+	return 1929         //unreachable code...
 }
