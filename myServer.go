@@ -29,7 +29,7 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 	}
 	uID := 2
 	if uID != -1 {
-		htmlOperations.GenerateNewTable()
+		htmlOperations.GenerateNewTable(uID)
 	}
 	setName := req.FormValue("setName")
 	termA := req.FormValue("termA")
@@ -47,7 +47,7 @@ func termsPage(res http.ResponseWriter, req *http.Request) {
 	setName := req.FormValue("setName")
 	termA := req.FormValue("termA")
 	termB := req.FormValue("termB")
-	dbOperations.TermsExisting(termA, termB, setName)
+	dbOperations.TermsExisting(termA, termB, setName, uID)
 	http.ServeFile(res, req, "termsPage.html")
 }
 

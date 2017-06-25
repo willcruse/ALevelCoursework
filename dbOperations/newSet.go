@@ -15,21 +15,23 @@ func NewSet(setName string, uID int) int64 { //function to create a new set
 	defer db.Close()
 	errCon := db.Ping()
 	checkError(errCon)
+	checkError(err)                                                                                  //Checks for errors in the dbconnection
+	rows, err := db.Query("SELECT setID FROM cards WHERE setName = ? AND userOwn = ?", setName, uID) //Query for sets which share the setName and user
+	if err == sql.ErrNoRows {                                                                        //if the user does not aready have a set sharing a name then it will create a new set
+		stmtC, err := db.Prepare("INSERT INTO cards (userOwn, setName) VALUES(?, ?)") //Prepares statement that creates new set
+		checkError(err)
+		res, err := stmtC.Exec(uID, setName)
+		checkError(err)
+		fmt.Println(res)
+		lastID, err := res.LastInsertId()
+		checkError(err)
+		return lastID //Returns id of the set
+	}
 	checkError(err)
-	rows, err := db.Query("SELECT setID FROM cards WHERE setName = ?", setName)
-	checkError(err)
-	for rows.Next() {
+	for rows.Next() { //returns the setID only Runs once as return statement exits the loop
 		var setID int64
 		noRows = rows.Scan(&setID)
 		return setID
 	}
-	fmt.Println(noRows)
-	stmtC, err := db.Prepare("INSERT INTO cards (userOwn, setName) VALUES(3, ?)")
-	checkError(err)
-	res, err := stmtC.Exec(setName)
-	checkError(err)
-	fmt.Println(res)
-	lastID, err := res.LastInsertId()
-	checkError(err)
-	return lastID
+	fmt.Println(noRows) //If error prints it
 }
