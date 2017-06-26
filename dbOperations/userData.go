@@ -47,9 +47,11 @@ func UserDataUname(uName string) []string {
 	for rows.Next() {
 		var uName string
 		var pw string
-		err = rows.Scan(&uName, &pw)
+		var uID int
+		err = rows.Scan(&uName, &pw, &uID)
 		data = append(data, uName)
 		data = append(data, pw)
+		data = append(data, uID)
 	}
 	return data
 }

@@ -7,6 +7,8 @@ import (
 	"github.com/willcruse/ComputingCoursework/htmlOperations"
 )
 
+var uID = -1
+
 //Main Function
 func main() {
 	http.HandleFunc("/", homePage)
@@ -27,7 +29,6 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 		http.ServeFile(res, req, "sets.html")
 		return
 	}
-	uID := 2
 	if uID != -1 {
 		htmlOperations.GenerateNewTable(uID)
 	}
@@ -40,7 +41,6 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 }
 
 func termsPage(res http.ResponseWriter, req *http.Request) {
-	uID := 4
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "termsPage.html")
 		return
@@ -64,6 +64,7 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 	if len(data) == 0 {
 		http.ServeFile(res, req, "signUpPage.html")
 	} else if pw == data[1] {
+		uID = data[2]
 		http.ServeFile(res, req, "sets.html")
 	} else {
 		http.ServeFile(res, req, "index.html")
