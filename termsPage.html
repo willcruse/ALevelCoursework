@@ -1,14 +1,23 @@
 <html>
-    <head>
-        <title>Terms Page</title>
-     </head>
-    <body style="background-color: #3f9fde;">
-        <h2>Add new term</h2>
-        <form method="POST" action="/setsPage">
-            <input type="text" name="setName" placeholder="setName">
-            <input type="text" name="termA" placeholder="termA">
-            <input type="text" name="termB" placeholder="termB">
-            <input type="submit" value="TermsPage">
-        </form>
-    </body>
+
+<head>
+    <title>Terms Page</title>
+</head>
+
+<body style="background-color: #3f9fde;">
+    <div id="header">
+        <button id="sets" onClick="location.href='setsPage.html'" style="padding:0px; border:0px;"><img src="images/sets.png" alt="sets"></button>
+        <button id="terms" onclick="location.href='termsPage.html'" style=" padding: 0px; border: 0px;"><img src="images/terms.png" alt="terms"></button>
+        <button id="login" onClick="location.href='loginPage.html'" style="position:absolute; left:1850px; padding: 0px; border: 0px;"><img src="images/login.png" alt="login"></button>
+        <button id="signup" onClick="location.href='signUpPage.html'" style="position:absolute; left:1760px; padding:0px; border:0px;"><img src="images/signup.png" alt="signup"></button>
+    </div>
+    <h2>Add new term</h2>
+    <form method="POST" action="/setsPage">
+        <input type="text" name="setName" placeholder="setName">
+        <input type="text" name="termA" placeholder="termA">
+        <input type="text" name="termB" placeholder="termB">
+        <input type="submit" value="TermsPage">
+    </form>
+</body>
+
 </html>

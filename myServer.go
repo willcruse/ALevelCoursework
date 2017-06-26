@@ -14,8 +14,8 @@ func main() {
 	http.HandleFunc("/", homePage)
 	http.HandleFunc("/setsPage", setsPage)
 	http.HandleFunc("/termsPage", termsPage)
-	http.HandleFunc("/login", loginPage)
-	http.HandleFunc("/signup", signUpPage)
+	http.HandleFunc("/loginPage", loginPage)
+	http.HandleFunc("/signupPage", signUpPage)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -26,7 +26,7 @@ func homePage(res http.ResponseWriter, req *http.Request) {
 
 func setsPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
-		http.ServeFile(res, req, "sets.html")
+		http.ServeFile(res, req, "setsPage.html")
 		return
 	}
 	if uID != -1 {
@@ -37,7 +37,7 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 	termB := req.FormValue("termB")
 	setID := dbOperations.NewSet(setName, uID)
 	dbOperations.NewTerm(termA, termB, setID)
-	http.ServeFile(res, req, "sets.html")
+	http.ServeFile(res, req, "setsPage.html")
 }
 
 func termsPage(res http.ResponseWriter, req *http.Request) {
@@ -64,7 +64,7 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 	if len(data) == 0 {
 		http.ServeFile(res, req, "signUpPage.html")
 	} else if pw == data[1] {
-		http.ServeFile(res, req, "sets.html")
+		http.ServeFile(res, req, "setsPage.html")
 	} else {
 		http.ServeFile(res, req, "index.html")
 	}
