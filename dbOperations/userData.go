@@ -30,8 +30,10 @@ func userDataUID(uID int) []string {
 	return data
 }
 
-func UserDataUname(uName string) []string {
+func UserDataUname(uName string) ([]string, int) {
 	var db *sql.DB
+	var data []string
+	uID := -1
 	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
@@ -40,18 +42,15 @@ func UserDataUname(uName string) []string {
 	rows, err := db.Query("SELECT uID, pw FROM users WHERE uName=?", uName)
 	fmt.Println(err)
 	if err == sql.ErrNoRows {
-		var data []string
-		return data
+		return data, uID
 	}
-	var data []string
+
 	for rows.Next() {
 		var uName string
 		var pw string
-		var uID int
 		err = rows.Scan(&uName, &pw, &uID)
 		data = append(data, uName)
 		data = append(data, pw)
-		data = append(data, uID)
 	}
-	return data
+	return data, uID
 }

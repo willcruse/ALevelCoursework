@@ -60,11 +60,10 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 	var data []string
 	userName := req.FormValue("userName")
 	pw := req.FormValue("pw")
-	data = dbOperations.UserDataUname(userName)
+	data, uID = dbOperations.UserDataUname(userName)
 	if len(data) == 0 {
 		http.ServeFile(res, req, "signUpPage.html")
 	} else if pw == data[1] {
-		uID = data[2]
 		http.ServeFile(res, req, "sets.html")
 	} else {
 		http.ServeFile(res, req, "index.html")
