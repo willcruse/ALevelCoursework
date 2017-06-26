@@ -16,7 +16,7 @@ func main() {
 	http.HandleFunc("/setsPage", setsPage)
 	http.HandleFunc("/termsPage", termsPage)
 	http.HandleFunc("/loginPage", loginPage)
-	http.HandleFunc("/signupPage", signUpPage)
+	http.HandleFunc("/signUpPage", signUpPage)
 	http.ListenAndServe(":8080", nil)
 }
 
