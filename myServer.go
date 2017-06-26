@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/willcruse/ComputingCoursework/dbOperations"
@@ -32,6 +33,10 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 	if uID != -1 {
 		htmlOperations.GenerateNewTable(uID)
 	}
+	if uID == -1 {
+		fmt.Println("Not logged in")
+		http.ServeFile(res, req, "signUpPage.html")
+	}
 	setName := req.FormValue("setName")
 	termA := req.FormValue("termA")
 	termB := req.FormValue("termB")
@@ -44,6 +49,10 @@ func termsPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "termsPage.html")
 		return
+	}
+	if uID == -1 {
+		fmt.Println("Not logged in")
+		http.ServeFile(res, req, "signUpPage.html")
 	}
 	setName := req.FormValue("setName")
 	termA := req.FormValue("termA")
