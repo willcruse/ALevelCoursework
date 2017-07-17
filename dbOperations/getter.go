@@ -6,27 +6,31 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func GetSets(uID int) []string { //Gets a list of setnames and returns as a string array
+func GetSets(uID int) ([]string, []int) { //Gets a list of setnames and returns as a string array
 	var db *sql.DB
-	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
+	db, err := sql.Open("mysql", "root:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
-	checkError(errCon)                                                      //Makig sure the db is connected and responding
-	rows, err := db.Query("SELECT setName FROM cards WHERE userOwn=?", uID) //Querying db for setNames where the user that owns is uID
+	checkError(errCon)                                                             //Makig sure the db is connected and responding
+	rows, err := db.Query("SELECT setName, setID FROM cards WHERE userOwn=?", uID) //Querying db for setNames where the user that owns is uID
 	checkError(err)
 	var data []string
+	var intData []int
 	for rows.Next() { //Adds each setname from rows to a slice called data
 		var setName string
+		var setID int
 		err = rows.Scan(&setName)
+		err = rows.Scan(&setID)
 		data = append(data, setName)
+		intData = append(intData, setID)
 	}
-	return data
+	return data, intData
 }
 
 func GetTerms(setName string, uID int) [][]string { //Gets a list of sets and returns as a slice of slices each containing a pair of terms
 	var db *sql.DB
-	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
+	db, err := sql.Open("mysql", "root:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()

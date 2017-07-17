@@ -9,7 +9,7 @@ import (
 
 func userDataUID(uID int) []string {
 	var db *sql.DB
-	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
+	db, err := sql.Open("mysql", "root:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
@@ -34,7 +34,7 @@ func UserDataUname(uName string) ([]string, int) {
 	var db *sql.DB
 	var data []string
 	uID := -1
-	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
+	db, err := sql.Open("mysql", "root:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()

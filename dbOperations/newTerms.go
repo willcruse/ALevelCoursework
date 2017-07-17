@@ -9,7 +9,7 @@ import (
 
 func NewTerm(term1, term2 string, setID int64) { //Function to make new terms in db from a setID
 	var db *sql.DB
-	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
+	db, err := sql.Open("mysql", "root:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
@@ -24,7 +24,7 @@ func NewTerm(term1, term2 string, setID int64) { //Function to make new terms in
 
 func TermsExisting(term1, term2, setName string, uID int) { //Func to make new terms in db from setName and uID
 	var db *sql.DB
-	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
+	db, err := sql.Open("mysql", "root:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()

@@ -1,14 +1,20 @@
 package main
 
 import (
+	"ComputingCoursework/dbOperations"
 	"fmt"
 	"net/http"
-
-	"github.com/willcruse/ComputingCoursework/dbOperations"
-	"github.com/willcruse/ComputingCoursework/htmlOperations"
 )
 
 var uID = -1
+var client clientInfo
+
+type clientInfo struct {
+	uID      int
+	uName    string
+	setIDs   []int
+	setNames []string
+}
 
 //Main Function
 func main() {
@@ -28,10 +34,13 @@ func homePage(res http.ResponseWriter, req *http.Request) {
 func setsPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "setsPage.html")
+
 		return
 	}
-	if uID != -1 {
-		htmlOperations.GenerateNewTable(uID)
+	if client.uID != -1 {
+		data, intData := dbOperations.GetSets(uID)
+		client.setIDs = intData
+		client.setNames = data
 	}
 	if uID == -1 {
 		fmt.Println("Not logged in")
@@ -45,7 +54,7 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 	http.ServeFile(res, req, "setsPage.html")
 }
 
-func termsPage(res http.ResponseWriter, req *http.Request) {
+func termsPage(res http.ResponseWriter, req *http.Request) { //makes new terms
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "termsPage.html")
 		return
@@ -73,6 +82,8 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 	if len(data) == 0 {
 		http.ServeFile(res, req, "signUpPage.html")
 	} else if pw == data[1] {
+		client.uID = uID
+		client.uName = userName
 		http.ServeFile(res, req, "setsPage.html")
 	} else {
 		http.ServeFile(res, req, "index.html")
@@ -88,5 +99,6 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 	pw := req.FormValue("pw")
 	email := req.FormValue("email")
 	dbOperations.NewUser(email, uName, pw)
+	fmt.Println("ADDED USER")
 	http.ServeFile(res, req, "loginPage.html")
 }

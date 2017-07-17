@@ -1,9 +1,7 @@
 package htmlOperations
 
-import "github.com/willcruse/ComputingCoursework/dbOperations"
-
-func GenerateNewTable(uID int) string {
-	rowStrings := dbOperations.GetSets(uID)
+/* func GenerateNewTable(uID int) string {
+	rowStrings, abc := dbOperations.GetSets(uID)
 	htmlOutput := "<table><tr><th>Sets</th></tr>"
 
 	for i := 0; i < len(rowStrings)-1; i++ {
@@ -22,4 +20,4 @@ func GenerateNewTableTERMS(uID int, setName string) string {
 		}
 	}
 	return htmlOutput
-}
+}*/

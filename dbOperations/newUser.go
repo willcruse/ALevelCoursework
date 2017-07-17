@@ -9,7 +9,7 @@ import (
 
 func NewUser(email, uName, pw string) {
 	var db *sql.DB
-	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
+	db, err := sql.Open("mysql", "root:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
