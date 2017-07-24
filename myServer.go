@@ -4,6 +4,8 @@ import (
 	"ComputingCoursework/dbOperations"
 	"fmt"
 	"net/http"
+	"encoding/json"
+	"bytes"
 )
 
 var uID = -1
@@ -23,6 +25,7 @@ func main() {
 	http.HandleFunc("/termsPage", termsPage)
 	http.HandleFunc("/loginPage", loginPage)
 	http.HandleFunc("/signUpPage", signUpPage)
+	http.HandleFunc("/getSetsData", getSetsData)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -102,3 +105,13 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("ADDED USER")
 	http.ServeFile(res, req, "loginPage.html")
 }
+
+func getSetsData(res http.ResponseWriter, req *http.Request){
+	byteArray, err := json.Marshal(client.setNames)
+	if err != nil {
+		panic(err)
+	}
+	http.Post("localhost:8080/setsPage", "application/json", bytes.NewBuffer(byteArray))
+}
+
+
