@@ -1,11 +1,12 @@
 package main
 
 import (
-	"ComputingCoursework/dbOperations"
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
-	"encoding/json"
-	"bytes"
+
+	"github.com/willcruse/ComputingCoursework/dbOperations"
 )
 
 var uID = -1
@@ -106,12 +107,10 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 	http.ServeFile(res, req, "loginPage.html")
 }
 
-func getSetsData(res http.ResponseWriter, req *http.Request){
+func getSetsData(res http.ResponseWriter, req *http.Request) {
 	byteArray, err := json.Marshal(client.setNames)
 	if err != nil {
 		panic(err)
 	}
 	http.Post("localhost:8080/setsPage", "application/json", bytes.NewBuffer(byteArray))
 }
-
-

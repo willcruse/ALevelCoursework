@@ -6,13 +6,13 @@
 
 </head>
 
-<body style="background-color: #3f9fde;" onload=" function getSetNames(){
+<body style="background-color: white;" onload=" function getSetNames(){
      $.ajax({
-        type: "GET",
-        url: "https://getSetsData",
-        dataType: "json",
+        type: " GET ",
+        url: "https://getSetsData ",
+        dataType: "json ",
         success: processData,
-        error: function(){console.log("Failed");}
+        error: function(){console.log("Failed ");}
     }) 
     function processData(data) {
            console.log(data);  
@@ -27,14 +27,14 @@
     <button id="newSetsButton" onclick="newSet()">New Set</button>
     <script>
         function newSet() {
-           var newSetsWindow = window.open("", null, "height=200, width=400");
-           newSetsWindow.document.write(" <form method='POST' action='/setsPage'><input type='text' name='setName' placeholder='setName'><input type='text' name='termA' placeholder='termA'><input type='text' name='termB' placeholder='termB'><input type='submit' value='SetsPage'> </form>");
-     }
+            var newSetsWindow = window.open("", null, "height=200, width=400");
+            newSetsWindow.document.write(" <form method='POST' action='/setsPage'><input type='text' name='setName' placeholder='setName'><input type='text' name='termA' placeholder='termA'><input type='text' name='termB' placeholder='termB'><input type='submit' value='SetsPage'> </form>");
+        }
     </script>
     <div id="setsTable">
-    <h2>My Sets</h2>
-    <table id="mySetsTable"></table>
-   
+        <h2>My Sets</h2>
+        <table id="mySetsTable"></table>
+
     </div>
 </body>
 
