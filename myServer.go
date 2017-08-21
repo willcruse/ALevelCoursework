@@ -9,15 +9,15 @@ import (
 	"github.com/willcruse/ComputingCoursework/dbOperations"
 )
 
-var uID = -1
-var client clientInfo
-
 type clientInfo struct {
 	uID      int
 	uName    string
 	setIDs   []int
 	setNames []string
 }
+
+var uID = -1
+var client clientInfo
 
 //Main Function
 func main() {
