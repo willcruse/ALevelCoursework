@@ -1,8 +1,6 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -26,7 +24,7 @@ func main() {
 	http.HandleFunc("/termsPage", termsPage)
 	http.HandleFunc("/loginPage", loginPage)
 	http.HandleFunc("/signUpPage", signUpPage)
-	http.HandleFunc("/getSetsData", getSetsData)
+	//http.HandleFunc("/getSetsData", getSetsData)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -38,13 +36,7 @@ func homePage(res http.ResponseWriter, req *http.Request) {
 func setsPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "setsPage.html")
-
 		return
-	}
-	if client.uID != -1 {
-		data, intData := dbOperations.GetSets(uID)
-		client.setIDs = intData
-		client.setNames = data
 	}
 	if uID == -1 {
 		fmt.Println("Not logged in")
@@ -105,12 +97,4 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 	dbOperations.NewUser(email, uName, pw)
 	fmt.Println("ADDED USER")
 	http.ServeFile(res, req, "loginPage.html")
-}
-
-func getSetsData(res http.ResponseWriter, req *http.Request) {
-	byteArray, err := json.Marshal(client.setNames)
-	if err != nil {
-		panic(err)
-	}
-	http.Post("localhost:8080/setsPage", "application/json", bytes.NewBuffer(byteArray))
 }
