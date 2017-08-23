@@ -2,6 +2,14 @@
 
 <head>
     <title>Main Page</title>
+    <script type="text/javascript" src="jq.min.js"></script>
+    <script>
+        $("document").ready(function() {
+            $("button").click(function() {
+                $("#jqueryTest").load("test.txt");
+            });
+        });
+    </script>
 </head>
 
 <body style="background-color: white;">
@@ -13,19 +21,10 @@
     </div>
     <div id="mainBody">
         <p>THIS IS THE FRONT PAGE</p>
+        <p id="jqueryTest"></p>
+        <button>a</button>
     </div>
-    <script>
-        var http = new XMLHttpRequest();
-        var url = "userDataSend.go";
-        http.open('GET', 'url', true);
-        http.setRequestHeader("Content-type", "text");
-        http.onreadystatechange = function() {
-            if (http.readyState == 4 && http.status == 200) {
-                console.log(http.responseText);
-            }
-        }
-        http.send(null);
-    </script>
+
 </body>
 
 </html>

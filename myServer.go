@@ -98,3 +98,7 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("ADDED USER")
 	http.ServeFile(res, req, "loginPage.html")
 }
+
+func testFunc(res http.ResponseWriter, req *http.Request)  {
+	res.Write([]byte("Hello World"))
+}
