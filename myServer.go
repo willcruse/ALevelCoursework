@@ -16,6 +16,7 @@ type clientInfo struct {
 
 var uID = -1
 var client clientInfo
+var loginSuccess = 0
 
 //Main Function
 func main() {
@@ -24,7 +25,7 @@ func main() {
 	http.HandleFunc("/termsPage", termsPage)
 	http.HandleFunc("/loginPage", loginPage)
 	http.HandleFunc("/signUpPage", signUpPage)
-	//http.HandleFunc("/getSetsData", getSetsData)
+	http.HandleFunc("uIDRequest", uIDPost)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -76,14 +77,15 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 	pw := req.FormValue("pw")
 	data, uID = dbOperations.UserDataUname(userName)
 	if len(data) == 0 {
-		http.ServeFile(res, req, "signUpPage.html")
+		loginSuccess = 1
 	} else if pw == data[1] {
 		client.uID = uID
 		client.uName = userName
-		http.ServeFile(res, req, "setsPage.html")
+		loginSuccess = 0
 	} else {
-		http.ServeFile(res, req, "index.html")
+		loginSuccess = 2
 	}
+	http.ServeFile(res, req, "loginPage.html")
 }
 
 func signUpPage(res http.ResponseWriter, req *http.Request) {
@@ -99,6 +101,13 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 	http.ServeFile(res, req, "loginPage.html")
 }
 
-func testFunc(res http.ResponseWriter, req *http.Request)  {
-	res.Write([]byte("Hello World"))
+func uIDPost(res http.ResponseWriter, req *http.Request) {
+	uIDbyte := byte(client.uID)
+	var uIDbyteArr []byte
+	uIDbyteArr[0] = uIDbyte
+	res.Write(uIDbyteArr)
+}
+
+func login(res http.ResponseWriter, req *http.Request) {
+	res.Write([]byte(string(loginSuccess)))
 }

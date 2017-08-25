@@ -52,5 +52,6 @@ func UserDataUname(uName string) ([]string, int) {
 		data = append(data, uName)
 		data = append(data, pw)
 	}
+	fmt.Println(data)
 	return data, uID
 }

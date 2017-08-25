@@ -2,22 +2,13 @@
 
 <head>
     <title>Set Page</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-
+    <script type="text/javascript" src="/serverOps/getSets">
+        var setsResquest = new XMLHttpRequest();
+        setsResquest.open('POST', 'getSets', false);
+    </script>
 </head>
 
-<body style="background-color: white;" onload=" function getSetNames(){
-     $.ajax({
-        type: " GET ",
-        url: "https://getSetsData ",
-        dataType: "json ",
-        success: processData,
-        error: function(){console.log("Failed ");}
-    }) 
-    function processData(data) {
-           console.log(data);  
-     }
-}">
+<body style="background-color: white;">
     <div id="header">
         <a id="sets" href='/setsPage' style="padding:0px; border:0px;"><img src="images/sets.png" alt="sets"></a>
         <a id="terms" href='/termsPage' style=" padding: 0px; border: 0px;"><img src="images/terms.png" alt="terms"></a>

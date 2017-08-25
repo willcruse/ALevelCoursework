@@ -1,14 +1,16 @@
+<!DOCTYPE html>
+
 <html>
 
 <head>
     <title>Main Page</title>
-    <script type="text/javascript" src="jq.min.js"></script>
     <script>
-        $("document").ready(function() {
-            $("button").click(function() {
-                $("#jqueryTest").load("test.txt");
-            });
-        });
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'testFunc', true);
+        xhr.onload = function() {
+            console.log(xhr.responseText);
+        };
+        xhr.send();
     </script>
 </head>
 
@@ -22,7 +24,6 @@
     <div id="mainBody">
         <p>THIS IS THE FRONT PAGE</p>
         <p id="jqueryTest"></p>
-        <button>a</button>
     </div>
 
 </body>

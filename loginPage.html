@@ -2,6 +2,46 @@
 
 <head>
     <title>Login</title>
+    <script type="text/javascript">
+        var uID;
+        var uIDR = new XMLHttpRequest();
+        uIDR.open('GET', 'uIDRequest', true);
+        uIDR.onload = function() {
+            uID = uIDR.responseText;
+        };
+        uIDR.send();
+        document.cookie = "uID" + "=" + uID + "" + "; path=/";
+        console.log(uID);
+    </script>
+    <script type="text/javascript">
+        function checkLoginSuccess() {
+            var loginSuccessR = new XMLHttpRequest();
+            loginSuccessR.open('GET', 'login', false);
+            loginSuccessR.onload = function() {
+                var loginSuccess = loginSuccessR.responseText;
+                switch (loginSuccess) {
+                    case "0":
+                        console.log("0");
+                        break;
+                    case "1":
+                        document.getElementById("successP").innerHTML = "Username incorrect";
+                        console.log("1");
+                        break;
+                    case "2":
+                        document.getElementById("successP").innerHTML = "Password incorrect";
+                        console.log("2");
+                        break;
+                    default:
+                        console.log("You know its fucked up");
+                        break;
+                }
+            };
+            loginSuccessR.send();
+        }
+        window.onload = function() {
+            document.getElementById("a").addEventListener('submit', checkLoginSuccess, true);
+        };
+    </script>
 </head>
 
 <body style="background-color: white;">
@@ -12,11 +52,12 @@
         <a id="signup" href='/signUpPage' style="position:absolute; left:1760px; padding:0px; border:0px;"><img src="images/signup.png" alt="signup"></a>
     </div>
     <h2>Login</h2>
-    <form method="POST" action="/loginPage">
+    <form id="a" method="POST" action="/loginPage">
         <input type="text" name="userName" placeholder="userName">
         <input type="password" name="pw" placeholder="pw">
         <input type="image" src="images/login.png" alt="login" />
     </form>
+    <p id="successP"></p>
 </body>
 
 </html>
