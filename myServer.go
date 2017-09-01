@@ -20,13 +20,18 @@ var loginSuccess = 0
 
 //Main Function
 func main() {
-	http.HandleFunc("/", homePage)
-	http.HandleFunc("/setsPage", setsPage)
-	http.HandleFunc("/termsPage", termsPage)
-	http.HandleFunc("/loginPage", loginPage)
-	http.HandleFunc("/signUpPage", signUpPage)
-	http.HandleFunc("uIDRequest", uIDPost)
-	http.ListenAndServe(":8080", nil)
+	mux := http.NewServeMux()
+	server := http.Server{
+		Addr:    ":8080",
+		Handler: mux,
+	}
+	mux.HandleFunc("/", homePage)
+	mux.HandleFunc("/setsPage", setsPage)
+	mux.HandleFunc("/termsPage", termsPage)
+	mux.HandleFunc("/loginPage", loginPage)
+	mux.HandleFunc("/signUpPage", signUpPage)
+	mux.HandleFunc("uIDRequest", uIDPost)
+	server.ListenAndServe()
 }
 
 //Page Functions
