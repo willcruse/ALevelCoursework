@@ -87,6 +87,7 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 		client.uID = uID
 		client.uName = userName
 		loginSuccess = 0
+		http.ServeFile(res, req, "setsPage.html")
 	} else {
 		loginSuccess = 2
 	}
