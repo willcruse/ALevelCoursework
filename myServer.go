@@ -31,6 +31,7 @@ func main() {
 	mux.HandleFunc("/loginPage", loginPage)
 	mux.HandleFunc("/signUpPage", signUpPage)
 	mux.HandleFunc("uIDRequest", uIDPost)
+	mux.HandleFunc("login", login)
 	server.ListenAndServe()
 }
 
@@ -81,14 +82,15 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 	userName := req.FormValue("userName")
 	pw := req.FormValue("pw")
 	data, uID = dbOperations.UserDataUname(userName)
-	if len(data) == 0 {
-		loginSuccess = 1
-	} else if pw == data[1] {
+	fmt.Println(data)
+	if len(data) == 0 { //incorrect userName
+		loginSuccess = 0
+	} else if pw == data[1] { //login
 		client.uID = uID
 		client.uName = userName
-		loginSuccess = 0
+		loginSuccess = 1
 		http.ServeFile(res, req, "setsPage.html")
-	} else {
+	} else { //incorrect pw
 		loginSuccess = 2
 	}
 	http.ServeFile(res, req, "loginPage.html")

@@ -2,57 +2,71 @@
 
 <head>
     <title>Login</title>
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         var uID;
         var uIDR = new XMLHttpRequest();
-        uIDR.open('GET', 'uIDRequest', true);
-        uIDR.onload = function() {
+        uIDR.open('GET', 'uIDRequest', false);
+        uIDR.onload = function () {
             uID = uIDR.responseText;
         };
         uIDR.send();
         document.cookie = "uID" + "=" + uID + "" + "; path=/";
         console.log(uID);
-    </script>
+    </script> !-->
     <script type="text/javascript">
         function checkLoginSuccess() {
+            console.log("run");
             var loginSuccessR = new XMLHttpRequest();
             loginSuccessR.open('GET', 'login', false);
-            loginSuccessR.onload = function() {
+            loginSuccessR.onload = function () {
                 var loginSuccess = loginSuccessR.responseText;
                 switch (loginSuccess) {
-                    case "0":
-                        console.log("0");
-                        break;
                     case "1":
+                        console.log(loginSuccess);
+                        break;
+                    case "0":
                         document.getElementById("successP").innerHTML = "Username incorrect";
-                        console.log("1");
+                        console.log(loginSuccess);
                         break;
                     case "2":
                         document.getElementById("successP").innerHTML = "Password incorrect";
-                        console.log("2");
+                        console.log(loginSuccess);
                         break;
                     default:
                         console.log("You know its fucked up");
+                        console.log(loginSuccess);
                         break;
                 }
+                var uID;
+                var uIDR = new XMLHttpRequest();
+                uIDR.open('GET', 'uIDRequest');
+                uIDR.onload = function () {
+                    uID = uIDR.responseText;
+                };
+                uIDR.send();
+                document.cookie = "uID" + "=" + uID + "" + "; path=/";
+                console.log(uID);
             };
             loginSuccessR.send();
         }
-        window.onload = function() {
-            document.getElementById("a").addEventListener('submit', checkLoginSuccess, true);
-        };
+    </script>
+    <script>
+        window.onload = function () {
+            var form = document.getElementById("a");
+            form.addEventListener('submit', checkLoginSuccess, true);
+        }
     </script>
 </head>
 
 <body style="background-color: white;">
     <div id="header">
         <a id="sets" href='/setsPage' style="padding:0px; border:0px;"><img src="images/sets.png" alt="sets"></a>
-        <a id="terms" href='/termsPage' style=" padding: 0px; border: 0px;"><img src="images/terms.png" alt="terms"></a>
-        <a id="login" href='/loginPage' style="position:absolute; left:1850px; padding: 0px; border: 0px;"><img src="images/login.png" alt="login"></a>
-        <a id="signup" href='/signUpPage' style="position:absolute; left:1760px; padding:0px; border:0px;"><img src="images/signup.png" alt="signup"></a>
+        <a id="terms" href='/termsPage' style=" position:absolute; left:5%; border: 0px;"><img src="images/terms.png" alt="terms"></a>
+        <a id="login" href='/loginPage' style="position:absolute; left:90%; padding: 0%; border: 0%;"><img src="images/login.png" alt="login"></a>
+        <a id="signup" href='/signUpPage' style="position:absolute; left:80%; padding:0px; border:0px;"><img src="images/signup.png" alt="signup"></a>
     </div>
     <h2>Login</h2>
-    <form id="a" method="POST" action="/loginPage">
+    <form id="a" method="POST" action="loginPage">
         <input type="text" name="userName" placeholder="userName">
         <input type="password" name="pw" placeholder="pw">
         <input type="image" src="images/login.png" alt="login" />
