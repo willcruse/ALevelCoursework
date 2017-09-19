@@ -30,8 +30,8 @@ func main() {
 	mux.HandleFunc("/termsPage", termsPage)
 	mux.HandleFunc("/loginPage", loginPage)
 	mux.HandleFunc("/signUpPage", signUpPage)
-	mux.HandleFunc("uIDRequest", uIDPost)
-	mux.HandleFunc("login", login)
+	mux.HandleFunc("/uIDRequest", uIDPost)
+	mux.HandleFunc("/login", login)
 	server.ListenAndServe()
 }
 
@@ -89,7 +89,6 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 		client.uID = uID
 		client.uName = userName
 		loginSuccess = 1
-		http.ServeFile(res, req, "setsPage.html")
 	} else { //incorrect pw
 		loginSuccess = 2
 	}
@@ -110,6 +109,7 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 }
 
 func uIDPost(res http.ResponseWriter, req *http.Request) {
+	fmt.Println("UID TRIG")
 	uIDbyte := byte(client.uID)
 	var uIDbyteArr []byte
 	uIDbyteArr[0] = uIDbyte
@@ -117,5 +117,6 @@ func uIDPost(res http.ResponseWriter, req *http.Request) {
 }
 
 func login(res http.ResponseWriter, req *http.Request) {
+	fmt.Println("TRIG")
 	res.Write([]byte(string(loginSuccess)))
 }

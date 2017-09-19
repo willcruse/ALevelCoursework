@@ -15,43 +15,42 @@
     </script> !-->
     <script type="text/javascript">
         function checkLoginSuccess() {
-            console.log("run");
-            var loginSuccessR = new XMLHttpRequest();
-            loginSuccessR.open('GET', 'login', false);
-            loginSuccessR.onload = function () {
-                var loginSuccess = loginSuccessR.responseText;
-                switch (loginSuccess) {
-                    case "1":
-                        console.log(loginSuccess);
-                        break;
-                    case "0":
-                        document.getElementById("successP").innerHTML = "Username incorrect";
-                        console.log(loginSuccess);
-                        break;
-                    case "2":
-                        document.getElementById("successP").innerHTML = "Password incorrect";
-                        console.log(loginSuccess);
-                        break;
-                    default:
-                        console.log("You know its fucked up");
-                        console.log(loginSuccess);
-                        break;
-                }
-                var uID;
-                var uIDR = new XMLHttpRequest();
-                uIDR.open('GET', 'uIDRequest');
-                uIDR.onload = function () {
-                    uID = uIDR.responseText;
-                };
-                uIDR.send();
-                document.cookie = "uID" + "=" + uID + "" + "; path=/";
-                console.log(uID);
-            };
-            loginSuccessR.send();
+            fetch('/login').then(function(response) {
+                response.text().then(function(loginSuccess) {
+                    switch (loginSuccess) {
+                        case "1":
+                            console.log(loginSuccess);
+                            var uID;
+                            fetch('/uIDRequest').then(function(response) {
+                                response.text().then(function(uID) {
+                                    console.log("COOKIES");
+                                    document.cookie = "uID" + "=" + uID + "" + "; path=/";
+                                    console.log(uID);
+                                    window.location = "/setsPage";
+                                });
+                            });
+                            break;
+                        case "0":
+                            document.getElementById("successP").innerHTML = "Username incorrect";
+                            console.log(loginSuccess);
+                            break;
+                        case "2":
+                            document.getElementById("successP").innerHTML = "Password incorrect";
+                            console.log(loginSuccess);
+                            break;
+                        default:
+                            console.log("You know its fucked up");
+                            console.log(loginSuccess);
+                            break;
+                    }
+
+
+                });
+            });
         }
     </script>
     <script>
-        window.onload = function () {
+        window.onload = function() {
             var form = document.getElementById("a");
             form.addEventListener('submit', checkLoginSuccess, true);
         }
