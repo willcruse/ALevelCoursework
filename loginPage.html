@@ -15,43 +15,53 @@
     </script> !-->
     <script type="text/javascript">
         function checkLoginSuccess() {
-            fetch('login').then(function(response) {
-                response.text().then(function(loginSuccess) {
-                    console.log(response.text());
-                    switch (loginSuccess) {
-                        case "1":
-                            console.log(loginSuccess);
-                            var uID;
-                            fetch('/uIDRequest').then(function(response) {
-                                response.text().then(function(uID) {
-                                    console.log("COOKIES");
-                                    document.cookie = "uID" + "=" + uID + "" + "; path=/";
-                                    console.log(uID);
-                                    window.location = "/setsPage";
+            var init = {
+                method: 'GET',
+                mode: 'no-cors',
+            };
+
+            fetch('loginPage/login', init)
+                .then(
+                    function (response) {
+                        console.log("Located");
+                        return ;
+                    })
+                .then(
+                    function (loginSuccess) {
+                        console.log(response.text());
+                        switch (loginSuccess) {
+                            case "1":
+                                console.log(loginSuccess);
+                                var uID;
+                                fetch('loginPage/uIDRequest').then(function (response) {
+                                    response.text().then(function (uID) {
+                                        console.log("COOKIES");
+                                        document.cookie = "uID" + "=" + uID + "" + "; path=/";
+                                        console.log(uID);
+                                        window.location = "/setsPage";
+                                    });
                                 });
-                            });
-                            break;
-                        case "0":
-                            document.getElementById("successP").innerHTML = "Username incorrect";
-                            console.log(loginSuccess);
-                            break;
-                        case "2":
-                            document.getElementById("successP").innerHTML = "Password incorrect";
-                            console.log(loginSuccess);
-                            break;
-                        default:
-                            console.log("You know its fucked up");
-                            console.log(loginSuccess);
-                            break;
-                    }
+                                break;
+                            case "0":
+                                document.getElementById("successP").innerHTML = "Username incorrect";
+                                console.log(loginSuccess);
+                                break;
+                            case "2":
+                                document.getElementById("successP").innerHTML = "Password incorrect";
+                                console.log(loginSuccess);
+                                break;
+                            default:
+                                console.log("You know its fucked up");
+                                console.log(loginSuccess);
+                                break;
+                        }
 
 
-                });
-            });
-        }
+                    });
+        };
     </script>
     <script>
-        window.onload = function() {
+        window.onload = function () {
             var form = document.getElementById("a");
             form.addEventListener('submit', checkLoginSuccess, true);
         }

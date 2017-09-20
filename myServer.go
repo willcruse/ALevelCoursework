@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/willcruse/ComputingCoursework/dbOperations"
 )
@@ -22,16 +23,19 @@ var loginSuccess = 0
 func main() {
 	mux := http.NewServeMux()
 	server := http.Server{
-		Addr:    ":8080",
-		Handler: mux,
+		Addr:         ":8080",
+		Handler:      mux,
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
 	}
 	mux.HandleFunc("/", homePage)
 	mux.HandleFunc("/setsPage", setsPage)
 	mux.HandleFunc("/termsPage", termsPage)
 	mux.HandleFunc("/loginPage", loginPage)
 	mux.HandleFunc("/signUpPage", signUpPage)
-	mux.HandleFunc("/uIDRequest", uIDPost)
-	mux.HandleFunc("/login", login)
+	mux.HandleFunc("/loginPage/uIDRequest", uIDPost)
+	mux.HandleFunc("/loginPage/login", login)
+	mux.HandleFunc("test", testFunc)
 	server.ListenAndServe()
 }
 
@@ -110,13 +114,18 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 
 func uIDPost(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("UID TRIG")
-	uIDbyte := byte(client.uID)
-	var uIDbyteArr []byte
-	uIDbyteArr[0] = uIDbyte
-	res.Write(uIDbyteArr)
+	uIDbyte := []byte(string(client.uID))
+	res.Write(uIDbyte)
+	return
 }
 
 func login(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("TRIG")
 	res.Write([]byte(string(loginSuccess)))
+	return
+}
+
+func testFunc(res http.ResponseWriter, req *http.Request) {
+	res.Write([]byte("tested"))
+	return
 }
