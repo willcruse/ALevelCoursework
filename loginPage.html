@@ -15,8 +15,9 @@
     </script> !-->
     <script type="text/javascript">
         function checkLoginSuccess() {
-            fetch('/login').then(function(response) {
+            fetch('login').then(function(response) {
                 response.text().then(function(loginSuccess) {
+                    console.log(response.text());
                     switch (loginSuccess) {
                         case "1":
                             console.log(loginSuccess);
