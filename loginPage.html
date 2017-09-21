@@ -2,7 +2,7 @@
 
 <head>
     <title>Login</title>
-   <script type="text/javascript">
+    <!-- <script type="text/javascript">
         /** var uID;
                 var uIDR = new XMLHttpRequest();
                 uIDR.open('GET', '/loginPage/uIDRequest', false);
@@ -18,11 +18,37 @@
             loginSuccessR.open('GET', '127.0.0.1:8080/loginPage/login', true);
             loginSuccessR.onload = function () {
                 var loginSuccess = loginSuccessR.responseText;
-                console.log(loginSuccess);
+                console.log(loginSuccess);  
+                switch (loginSuccess) {
+                            case "1":
+                                console.log(loginSuccess);
+                                var uID;
+                                fetch('127.0.0.1:8080/loginPage/uIDRequest').then(function (response) {
+                                    response.text().then(function (uID) {
+                                        console.log("COOKIES");
+                                        document.cookie = "uID" + "=" + uID + "" + "; path=/";
+                                        console.log(uID);
+                                        window.location = "/setsPage";
+                                    });
+                                });
+                                break;
+                            case "0":
+                                document.getElementById("successP").innerHTML = "Username incorrect";
+                                console.log(loginSuccess);
+                                break;
+                            case "2":
+                                document.getElementById("successP").innerHTML = "Password incorrect";
+                                console.log(loginSuccess);
+                                break;
+                            default:
+                                console.log("You know its fucked up");
+                                console.log(loginSuccess);
+                                break;
+                        }
             }
             loginSuccessR.send();
         }
-    </script> 
+    </script> !-->
     <!-- <script type="text/javascript">
         function checkLoginSuccess() {
             var init = {
@@ -70,6 +96,24 @@
                     });
         };
     </script> !-->
+    <script type="text/javascript">
+        function checkLoginSuccess() {
+            fetch("127.0.0.1:8080/loginPage/login")
+                .then(function (response) {
+                    var contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        return response.json();
+                    }
+                    throw new TypeError("Oops, we haven't got JSON!");
+                })
+                .then(function (json) { 
+                    console.log(json);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+    </script>
     <script>
         window.onload = function () {
             var form = document.getElementById("a");
@@ -86,7 +130,7 @@
         <a id="signup" href='/signUpPage' style="position:absolute; left:80%; padding:0px; border:0px;"><img src="images/signup.png" alt="signup"></a>
     </div>
     <h2>Login</h2>
-    <form id="a" method="POST" action="loginPage">
+    <form id="a" method="POST" action="/loginPage">
         <input type="text" name="userName" placeholder="userName">
         <input type="password" name="pw" placeholder="pw">
         <input type="image" src="images/login.png" alt="login" />

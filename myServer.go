@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -130,9 +131,18 @@ func uIDPost(res http.ResponseWriter, req *http.Request) {
 }
 
 func login(res http.ResponseWriter, req *http.Request) {
-	fmt.Println("TRIG")
-	res.Write([]byte(string(loginSuccess)))
-	return
+	type Success struct {
+		dataName string
+		data     int
+	}
+	success := Success{"loginSuccess", loginSuccess}
+	js, err := json.Marshal(success)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	res.Header().Set("Content-Type", "application/json")
+	res.Write(js)
 }
 
 func testFunc(res http.ResponseWriter, req *http.Request) {
