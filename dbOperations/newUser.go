@@ -11,7 +11,7 @@ func NewUser(email, uName, pw string) int {
 	i, b := checkTaken(email, uName)
 	if i {
 		return 0
-	}else if b {
+	} else if b {
 		return 1
 	}
 	var db *sql.DB
@@ -39,17 +39,17 @@ func checkTaken(email, uName string) (bool, bool) {
 	errCon := db.Ping()
 	checkError(errCon)
 	checkError(err)
-	rows, err := db.QueryRow("SELECT * FROM users WHERE uName=? OR email=?", uName, email)
+	rows, err := db.Query("SELECT * FROM users WHERE uName=? OR email=?", uName, email)
 	if err != sql.ErrNoRows {
-		return (false, false)
+		return false, false
 	}
-	var uNameRes "!###!"
-	var emailRes "!##~##!"
+	var uNameRes = "!###!"
+	var emailRes = "!##~##!"
 	rows.Scan(&uNameRes, &emailRes)
-	if uNameRes != "!###!"{
-		return (true, false)
-	}else if emailRes != "!##~##!"{
-		return (false, true)
+	if uNameRes != "!###!" {
+		return true, false
+	} else if emailRes != "!##~##!" {
+		return false, true
 	}
-
+	return false, false
 }
