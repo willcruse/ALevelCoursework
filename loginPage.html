@@ -2,7 +2,7 @@
 
 <head>
     <title>Login</title>
-    <script type="text/javascript">
+   <!-- <script type="text/javascript">
         /** var uID;
                 var uIDR = new XMLHttpRequest();
                 uIDR.open('GET', '/loginPage/uIDRequest', false);
@@ -20,15 +20,15 @@
             }
             loginSuccessR.send();
         }
-    </script>
-    <!--  <script type="text/javascript">
+    </script> !-->
+     <script type="text/javascript">
         function checkLoginSuccess() {
             var init = {
                 method: 'GET',
-                mode: 'no-cors',
+                mode: 'cors',
             };
 
-            fetch('loginPage/login', init)
+            fetch('127.0.0.1:8080/loginPage/login', init)
                 .then(
                     function (response) {
                         console.log("Located");
@@ -67,7 +67,7 @@
 
                     });
         };
-    </script> !-->
+    </script>
     <script>
         window.onload = function () {
             var form = document.getElementById("a");

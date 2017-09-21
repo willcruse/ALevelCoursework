@@ -119,6 +119,7 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 		fmt.Println("ADDED USER")
 		http.ServeFile(res, req, "loginPage.html")
 	}
+	fmt.Println(result)
 }
 
 func uIDPost(res http.ResponseWriter, req *http.Request) {
