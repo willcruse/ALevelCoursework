@@ -18,8 +18,8 @@ func userDataUID(uID int) []string {
 	checkError(err)
 	var data []string
 	for rows.Next() {
-		var email string
 		var uName string
+		var email string
 		var pw string
 		err = rows.Scan(&email, &uName, &pw)
 		data = append(data, email)
@@ -49,8 +49,5 @@ func UserDataUname(uName string) ([]string, int) {
 	}
 	data = append(data, uNameRes)
 	data = append(data, pw)
-	for i := range data {
-		fmt.Println(data[i])
-	}
 	return data, uID
 }
