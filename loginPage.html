@@ -98,7 +98,11 @@
     </script> !-->
     <script type="text/javascript">
         function checkLoginSuccess() {
-            fetch("127.0.0.1:8080/loginPage/login")
+            var init = {
+                method: 'GET',
+                mode: 'cors'
+            };
+            fetch("127.0.0.1:8080/loginPage/login", init)
                 .then(function (response) {
                     var contentType = response.headers.get("content-type");
                     if (contentType && contentType.includes("application/json")) {
