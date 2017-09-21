@@ -107,9 +107,18 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 	uName := req.FormValue("userName")
 	pw := req.FormValue("pw")
 	email := req.FormValue("email")
-	dbOperations.NewUser(email, uName, pw)
-	fmt.Println("ADDED USER")
-	http.ServeFile(res, req, "loginPage.html")
+	succ := dbOperations.NewUser(email, uName, pw)
+	var result string
+	switch succ {
+	case 0:
+		result = "Username Taken"
+	case 1:
+		result = "Email already used"
+	case 2:
+		result = "User Added"
+		fmt.Println("ADDED USER")
+		http.ServeFile(res, req, "loginPage.html")
+	}
 }
 
 func uIDPost(res http.ResponseWriter, req *http.Request) {
