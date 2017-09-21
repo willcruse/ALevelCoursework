@@ -2,18 +2,26 @@
 
 <head>
     <title>Login</title>
-    <!-- <script type="text/javascript">
-        var uID;
-        var uIDR = new XMLHttpRequest();
-        uIDR.open('GET', 'uIDRequest', false);
-        uIDR.onload = function () {
-            uID = uIDR.responseText;
-        };
-        uIDR.send();
-        document.cookie = "uID" + "=" + uID + "" + "; path=/";
-        console.log(uID);
-    </script> !-->
     <script type="text/javascript">
+        /** var uID;
+                var uIDR = new XMLHttpRequest();
+                uIDR.open('GET', '/loginPage/uIDRequest', false);
+                uIDR.onload = function () {
+                    uID = uIDR.responseText;
+                };
+                uIDR.send();
+                document.cookie = "uID" + "=" + uID + "" + "; path=/";
+                console.log(uID); **/
+        function checkLoginSuccess() {
+            var loginSuccessR = new XMLHttpRequest();
+            loginSuccessR.open('GET', '/loginPage/login', true);
+            loginSuccessR.onload = function () {
+                var loginSuccess = loginSuccessR.responseText;
+            }
+            loginSuccessR.send();
+        }
+    </script>
+    <!--  <script type="text/javascript">
         function checkLoginSuccess() {
             var init = {
                 method: 'GET',
@@ -59,7 +67,7 @@
 
                     });
         };
-    </script>
+    </script> !-->
     <script>
         window.onload = function () {
             var form = document.getElementById("a");

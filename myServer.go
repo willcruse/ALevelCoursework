@@ -35,7 +35,7 @@ func main() {
 	mux.HandleFunc("/signUpPage", signUpPage)
 	mux.HandleFunc("/loginPage/uIDRequest", uIDPost)
 	mux.HandleFunc("/loginPage/login", login)
-	mux.HandleFunc("test", testFunc)
+	mux.HandleFunc("/test", testFunc)
 	server.ListenAndServe()
 }
 
