@@ -100,26 +100,26 @@
         function checkLoginSuccess() {
             var init = {
                 method: 'GET',
-                mode: 'cors'
+                mode: 'no-cors'
             };
-            fetch("127.0.0.1:8080/loginPage/login", init)
-                .then(function (response) {
+            fetch("192.168.1.12:8080/loginPage/login", init)
+                .then(function(response) {
                     var contentType = response.headers.get("content-type");
                     if (contentType && contentType.includes("application/json")) {
                         return response.json();
                     }
                     throw new TypeError("Oops, we haven't got JSON!");
                 })
-                .then(function (json) { 
+                .then(function(json) {
                     console.log(json);
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     console.log(error);
                 });
         }
     </script>
     <script>
-        window.onload = function () {
+        window.onload = function() {
             var form = document.getElementById("a");
             form.addEventListener('submit', checkLoginSuccess, true);
         }
