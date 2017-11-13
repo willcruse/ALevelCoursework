@@ -2,108 +2,17 @@
 
 <head>
     <title>Login</title>
-    <!-- <script type="text/javascript">
-        /** var uID;
-                var uIDR = new XMLHttpRequest();
-                uIDR.open('GET', '/loginPage/uIDRequest', false);
-                uIDR.onload = function () {
-                    uID = uIDR.responseText;
-                };
-                uIDR.send();
-                document.cookie = "uID" + "=" + uID + "" + "; path=/";
-                console.log(uID); **/
-        function checkLoginSuccess() {
-            console.log("TRIG");
-            var loginSuccessR = new XMLHttpRequest();
-            loginSuccessR.open('GET', '127.0.0.1:8080/loginPage/login', true);
-            loginSuccessR.onload = function () {
-                var loginSuccess = loginSuccessR.responseText;
-                console.log(loginSuccess);  
-                switch (loginSuccess) {
-                            case "1":
-                                console.log(loginSuccess);
-                                var uID;
-                                fetch('127.0.0.1:8080/loginPage/uIDRequest').then(function (response) {
-                                    response.text().then(function (uID) {
-                                        console.log("COOKIES");
-                                        document.cookie = "uID" + "=" + uID + "" + "; path=/";
-                                        console.log(uID);
-                                        window.location = "/setsPage";
-                                    });
-                                });
-                                break;
-                            case "0":
-                                document.getElementById("successP").innerHTML = "Username incorrect";
-                                console.log(loginSuccess);
-                                break;
-                            case "2":
-                                document.getElementById("successP").innerHTML = "Password incorrect";
-                                console.log(loginSuccess);
-                                break;
-                            default:
-                                console.log("You know its fucked up");
-                                console.log(loginSuccess);
-                                break;
-                        }
-            }
-            loginSuccessR.send();
-        }
-    </script> !-->
-    <!-- <script type="text/javascript">
-        function checkLoginSuccess() {
-            var init = {
-                method: 'GET',
-                mode: 'cors',
-            };
-
-            fetch('127.0.0.1:8080/loginPage/login', init)
-                .then(
-                    function (response) {
-                        console.log("Located");
-                        return ;
-                    })
-                .then(
-                    function (loginSuccess) {
-                        console.log(response.text());
-                        switch (loginSuccess) {
-                            case "1":
-                                console.log(loginSuccess);
-                                var uID;
-                                fetch('loginPage/uIDRequest').then(function (response) {
-                                    response.text().then(function (uID) {
-                                        console.log("COOKIES");
-                                        document.cookie = "uID" + "=" + uID + "" + "; path=/";
-                                        console.log(uID);
-                                        window.location = "/setsPage";
-                                    });
-                                });
-                                break;
-                            case "0":
-                                document.getElementById("successP").innerHTML = "Username incorrect";
-                                console.log(loginSuccess);
-                                break;
-                            case "2":
-                                document.getElementById("successP").innerHTML = "Password incorrect";
-                                console.log(loginSuccess);
-                                break;
-                            default:
-                                console.log("You know its fucked up");
-                                console.log(loginSuccess);
-                                break;
-                        }
-
-
-                    });
-        };
-    </script> !-->
     <script type="text/javascript">
         function checkLoginSuccess() {
             var init = {
                 method: 'GET',
-                mode: 'cors'
+                mode: 'no-cors'
             };
             fetch("127.0.0.1:8080/loginPage/login", init)
                 .then(function(response) {
+                    if (!response.ok()) {
+                        console.log("not ok");
+                    }
                     var contentType = response.headers.get("content-type");
                     if (contentType && contentType.includes("application/json")) {
                         console.log(response.json);
@@ -111,8 +20,8 @@
                     }
                     throw new TypeError("Oops, we haven't got JSON!");
                 })
-                .then(function(json) {
-                    console.log(json);
+                .then(function(response) {
+                    console.log(response.json);
                 })
                .catch(function(error) {
                     console.log(error);

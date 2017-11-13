@@ -139,15 +139,12 @@ func login(res http.ResponseWriter, req *http.Request) {
 		Data:     0}
 	fmt.Println("Success", success)
 	js, err := json.Marshal(success)
-	fmt.Println(err)
-	fmt.Println("JS", string(js))
 	if err != nil {
 		fmt.Println("JError", err)
 		return
 	}
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(js)
-	fmt.Println(res)
 	return
 }
 
