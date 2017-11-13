@@ -1,5 +1,7 @@
 CREATE DATABASE educationWebsite;
+
 USE educationWebsite;
+
 CREATE TABLE users  (
     uID int AUTO_INCREMENT PRIMARY KEY, 
     email VARCHAR(40) NOT NULL, 
