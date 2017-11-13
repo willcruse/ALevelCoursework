@@ -100,9 +100,9 @@
         function checkLoginSuccess() {
             var init = {
                 method: 'GET',
-                mode: 'no-cors'
+                mode: 'cors'
             };
-            fetch("192.168.1.12:8080/loginPage/login", init)
+            fetch("127.0.0.1:8080/loginPage/login", init)
                 .then(function(response) {
                     var contentType = response.headers.get("content-type");
                     if (contentType && contentType.includes("application/json")) {
@@ -113,8 +113,8 @@
                 .then(function(json) {
                     console.log(json);
                 })
-                .catch(function(error) {
-                    console.log(error);
+               .catch(function(error) {
+                    alert(error);
                 });
         }
     </script>

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/willcruse/ComputingCoursework/dbOperations"
 )
@@ -23,12 +22,12 @@ var loginSuccess = 0
 //Main Function
 func main() {
 	mux := http.NewServeMux()
-	server := http.Server{
+	/**server := http.Server{
 		Addr:         ":8080",
 		Handler:      mux,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
-	}
+	}**/
 	mux.HandleFunc("/", homePage)
 	mux.HandleFunc("/setsPage", setsPage)
 	mux.HandleFunc("/termsPage", termsPage)
@@ -37,7 +36,7 @@ func main() {
 	mux.HandleFunc("/loginPage/uIDRequest", uIDPost)
 	mux.HandleFunc("/loginPage/login", login)
 	mux.HandleFunc("/test", testFunc)
-	server.ListenAndServe()
+	http.ListenAndServe(":8080", mux)
 }
 
 //Page Functions
