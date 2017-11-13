@@ -131,21 +131,23 @@ func uIDPost(res http.ResponseWriter, req *http.Request) {
 
 func login(res http.ResponseWriter, req *http.Request) {
 	type Success struct {
-		dataName string
-		data     int
+		DataName string `json:"dataName"`
+		Data     int    `json:"data"`
 	}
-	success := Success{"loginSuccess", loginSuccess}
+	success := &Success{
+		DataName: "loginSuccess",
+		Data:     0}
+	fmt.Println("Success", success)
 	js, err := json.Marshal(success)
+	fmt.Println(err)
+	fmt.Println("JS", string(js))
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("JError", err)
 		return
 	}
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(js)
-	var unMarshaled Success
-	unMarshaledE := json.Unmarshal(js, unMarshaled)
-	fmt.Println(unMarshaledE)
-	fmt.Println("JSON", unMarshaled)
+	fmt.Println(res)
 	return
 }
 
