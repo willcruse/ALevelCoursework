@@ -142,6 +142,11 @@ func login(res http.ResponseWriter, req *http.Request) {
 	}
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(js)
+	var unMarshaled Success
+	unMarshaledE := json.Unmarshal(js, unMarshaled)
+	fmt.Println(unMarshaledE)
+	fmt.Println("JSON", unMarshaled)
+	return
 }
 
 func testFunc(res http.ResponseWriter, req *http.Request) {

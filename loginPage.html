@@ -106,6 +106,7 @@
                 .then(function(response) {
                     var contentType = response.headers.get("content-type");
                     if (contentType && contentType.includes("application/json")) {
+                        console.log(response.json);
                         return response.json();
                     }
                     throw new TypeError("Oops, we haven't got JSON!");
@@ -114,7 +115,7 @@
                     console.log(json);
                 })
                .catch(function(error) {
-                    alert(error);
+                    console.log(error);
                 });
         }
     </script>
@@ -134,7 +135,7 @@
         <a id="signup" href='/signUpPage' style="position:absolute; left:80%; padding:0px; border:0px;"><img src="images/signup.png" alt="signup"></a>
     </div>
     <h2>Login</h2>
-    <form id="a" method="POST" action="/loginPage">
+    <form id="a" method="POST" action="/loginPage/login">
         <input type="text" name="userName" placeholder="userName">
         <input type="password" name="pw" placeholder="pw">
         <input type="image" src="images/login.png" alt="login" />
