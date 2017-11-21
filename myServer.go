@@ -131,13 +131,14 @@ func uIDPost(res http.ResponseWriter, req *http.Request) {
 
 func login(res http.ResponseWriter, req *http.Request) {
 	type Success struct {
-		DataName string `json:"dataName"`
-		Data     int    `json:"data"`
+		Data     int    `json:"loginsuccess"`
+		UserName string `json:userName`
+		Password string `json:"pw"`
+
 	}
 	success := &Success{
 		DataName: "loginSuccess",
 		Data:     0}
-	fmt.Println("Success", success)
 	js, err := json.Marshal(success)
 	if err != nil {
 		fmt.Println("JError", err)
