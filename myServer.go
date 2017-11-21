@@ -4,15 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/willcruse/ComputingCoursework/dbOperations"
 )
 
 type clientInfo struct {
-	uID      int
-	uName    string
-	setIDs   []int
-	setNames []string
+	uID   int
+	uName string
+	pw    string
 }
 
 var uID = -1
@@ -22,12 +22,12 @@ var loginSuccess = 0
 //Main Function
 func main() {
 	mux := http.NewServeMux()
-	/**server := http.Server{
+	server := http.Server{
 		Addr:         ":8080",
 		Handler:      mux,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
-	}**/
+	}
 	mux.HandleFunc("/", homePage)
 	mux.HandleFunc("/setsPage", setsPage)
 	mux.HandleFunc("/termsPage", termsPage)
@@ -36,7 +36,10 @@ func main() {
 	mux.HandleFunc("/loginPage/uIDRequest", uIDPost)
 	mux.HandleFunc("/loginPage/login", login)
 	mux.HandleFunc("/test", testFunc)
-	http.ListenAndServe(":8080", mux)
+	err := server.ListenAndServe()
+	if err != nil {
+		panic(err)
+	}
 }
 
 //Page Functions
@@ -82,20 +85,8 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 		http.ServeFile(res, req, "loginPage.html")
 		return
 	}
-	var data []string
-	userName := req.FormValue("userName")
-	pw := req.FormValue("pw")
-	data, uID = dbOperations.UserDataUname(userName)
-	fmt.Println(data)
-	if len(data) == 0 { //incorrect userName
-		loginSuccess = 0
-	} else if pw == data[1] { //login
-		client.uID = uID
-		client.uName = userName
-		loginSuccess = 1
-	} else { //incorrect pw
-		loginSuccess = 2
-	}
+	client.uName = req.FormValue("userName")
+	client.pw = req.FormValue("pw")
 	http.ServeFile(res, req, "loginPage.html")
 }
 
@@ -130,15 +121,27 @@ func uIDPost(res http.ResponseWriter, req *http.Request) {
 }
 
 func login(res http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		http.ServeFile(res, req, "loginPage.html")
+	}
 	type Success struct {
-		Data     int    `json:"loginsuccess"`
-		UserName string `json:userName`
-		Password string `json:"pw"`
-
+		Succ int `json:"loginsuccess"`
+		uID  int `json:"UID"`
+	}
+	var data []string
+	var uID int
+	data, uID = dbOperations.UserDataUname(client.uName)
+	fmt.Println(data)
+	if len(data) == 0 { //incorrect userName
+		loginSuccess = 0
+	} else if client.pw == data[1] { //login
+		loginSuccess = 1
+	} else { //incorrect pw
+		loginSuccess = 2
 	}
 	success := &Success{
-		DataName: "loginSuccess",
-		Data:     0}
+		uID:  uID,
+		Succ: loginSuccess}
 	js, err := json.Marshal(success)
 	if err != nil {
 		fmt.Println("JError", err)

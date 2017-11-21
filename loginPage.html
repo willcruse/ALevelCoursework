@@ -8,7 +8,6 @@
             var init = {
                 method: 'POST',
                 mode: 'no-cors',
-                body: data
             };
             fetch("127.0.0.1:8080/loginPage/login", init)
                 .then(function(response) {
@@ -17,13 +16,16 @@
                     }
                     var contentType = response.headers.get("content-type");
                     if (contentType && contentType.includes("application/json")) {
-                        console.log(response.json);
+                        console.log(response.json());
                         return response.json();
                     }
                     throw new TypeError("Oops, we haven't got JSON!");
                 })
                 .then(function(response) {
-                    console.log(response.json);
+                    var res = response.json;
+                    console.log(res);
+                    var i = JSON.parse(res);
+                    console.log(i);
                 })
                .catch(function(error) {
                     console.log(error);
