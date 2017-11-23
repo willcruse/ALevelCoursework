@@ -34,7 +34,7 @@ func main() {
 	mux.HandleFunc("/loginPage", loginPage)
 	mux.HandleFunc("/signUpPage", signUpPage)
 	mux.HandleFunc("/loginPage/uIDRequest", uIDPost)
-	mux.HandleFunc("/loginPage/login", login)
+	//mux.HandleFunc("/loginPage/login", login)
 	mux.HandleFunc("/test", testFunc)
 	err := server.ListenAndServe()
 	if err != nil {
@@ -80,9 +80,9 @@ func termsPage(res http.ResponseWriter, req *http.Request) { //makes new terms
 	http.ServeFile(res, req, "termsPage.html")
 }
 
-func loginPage(res http.ResponseWriter, req *http.Request) {
+/**func loginPage(res http.ResponseWriter, req *http.Request) {
 	http.ServeFile(res, req, "loginPage.html")
-}
+}**/
 
 func signUpPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
@@ -114,7 +114,7 @@ func uIDPost(res http.ResponseWriter, req *http.Request) {
 	return
 }
 
-func login(res http.ResponseWriter, req *http.Request) {
+func loginPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "loginPage.html")
 	}
@@ -144,7 +144,7 @@ func login(res http.ResponseWriter, req *http.Request) {
 		fmt.Println("JError", err)
 		return
 	}
-	res.Header().Set("Content-Type", "json/application")
+	res.Header().Set("Content-Type", "application/json")
 	res.Write(js)
 	return
 }

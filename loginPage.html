@@ -2,7 +2,6 @@
 
 <head>
     <title>Login</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
         function checkLoginSuccess() {
 
@@ -36,12 +35,12 @@
                 }) 
                .catch(function(error) {
                     console.log(error);
-                }); 
+                }); **/
                 var init = {
-                method: 'POST',
+                method: 'GET',
                 mode: 'no-cors',
             };
-            fetch('/loginPage/login', init)
+            fetch('/loginPage')
                 .then(
                 function (response) {
                     if (response.status !== 200) {
@@ -57,13 +56,8 @@
                 }
                 )
                 .catch(function (err) {
-                    console.log('Fetch Error :-S', err);
+                    console.log('Fetch Error ', err);
                 });
-                **/
-            $.get("loginPage/login", function(data, status){
-                console.log(status);
-                console.log(data);
-            });
         }
     </script>
     <script>
@@ -90,7 +84,7 @@
         </a>
     </div>
     <h2>Login</h2>
-    <form id="a" method="POST" action="loginPage/login">
+    <form id="a" method="POST" action="loginPage">
         <input type="text" name="userName" placeholder="userName">
         <input type="password" name="pw" placeholder="pw">
         <input type="image" src="images/login.png" alt="login" />
