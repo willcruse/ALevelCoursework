@@ -81,12 +81,6 @@ func termsPage(res http.ResponseWriter, req *http.Request) { //makes new terms
 }
 
 func loginPage(res http.ResponseWriter, req *http.Request) {
-	if req.Method != "POST" {
-		http.ServeFile(res, req, "loginPage.html")
-		return
-	}
-	client.uName = req.FormValue("userName")
-	client.pw = req.FormValue("pw")
 	http.ServeFile(res, req, "loginPage.html")
 }
 
@@ -126,10 +120,13 @@ func login(res http.ResponseWriter, req *http.Request) {
 	}
 	type Success struct {
 		Succ int `json:"loginsuccess"`
-		uID  int `json:"UID"`
+		UID  int `json:"UID"`
 	}
 	var data []string
 	var uID int
+	client.uName = req.FormValue("userName")
+	client.pw = req.FormValue("pw")
+	fmt.Println(client.uName)
 	data, uID = dbOperations.UserDataUname(client.uName)
 	fmt.Println(data)
 	if len(data) == 0 { //incorrect userName
@@ -140,14 +137,14 @@ func login(res http.ResponseWriter, req *http.Request) {
 		loginSuccess = 2
 	}
 	success := &Success{
-		uID:  uID,
+		UID:  uID,
 		Succ: loginSuccess}
 	js, err := json.Marshal(success)
 	if err != nil {
 		fmt.Println("JError", err)
 		return
 	}
-	res.Header().Set("Content-Type", "application/json")
+	res.Header().Set("Content-Type", "json/application")
 	res.Write(js)
 	return
 }

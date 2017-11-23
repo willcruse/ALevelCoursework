@@ -43,7 +43,7 @@ func checkTaken(email, uName string) (bool, bool) {
 	if err != sql.ErrNoRows {
 		return false, false
 	}
-	var uNameRes = "!###!"
+	var uNameRes = "!###!" //Random Strings
 	var emailRes = "!##~##!"
 	rows.Scan(&uNameRes, &emailRes)
 	if uNameRes != "!###!" {

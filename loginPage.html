@@ -1,56 +1,101 @@
 <html>
+
 <head>
     <title>Login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
         function checkLoginSuccess() {
-            
-            var init = {
+
+            /**var init = {
                 method: 'POST',
-                mode: 'no-cors',
+                mode: 'cors',
             };
-            fetch("127.0.0.1:8080/loginPage/login", init)
-                .then(function(response) {
-                    if (!response.ok()) {
-                        console.log("not ok");
+            fetch("./login", init)
+                .then(
+                    function(response) {
+                    if (response.status != 200) {
+                        console.log(response.status);
                     }
+
                     var contentType = response.headers.get("content-type");
                     if (contentType && contentType.includes("application/json")) {
                         console.log(response.json());
                         return response.json();
                     }
-                    throw new TypeError("Oops, we haven't got JSON!");
+                    throw new TypeError("Oops, we haven't got JSON!"); 
+                    response.json().then(function(data) {
+        console.log(data);
+
                 })
-                .then(function(response) {
+               /** .then(function(response) {
+                    console.log("trig");
                     var res = response.json;
                     console.log(res);
                     var i = JSON.parse(res);
                     console.log(i);
-                })
+                }) 
                .catch(function(error) {
                     console.log(error);
+                }); 
+                var init = {
+                method: 'POST',
+                mode: 'no-cors',
+            };
+            fetch('/loginPage/login', init)
+                .then(
+                function (response) {
+                    if (response.status !== 200) {
+                        console.log('Looks like there was a problem. Status Code: ' +
+                            response.status);
+                        return;
+                    }
+
+                    // Examine the text in the response
+                    response.json().then(function (data) {
+                        console.log(data);
+                    });
+                }
+                )
+                .catch(function (err) {
+                    console.log('Fetch Error :-S', err);
                 });
+                **/
+            $.get("loginPage/login", function(data, status){
+                console.log(status);
+                console.log(data);
+            });
         }
     </script>
     <script>
-        window.onload = function() {
+        window.onload = function () {
             var form = document.getElementById("a");
             form.addEventListener('submit', checkLoginSuccess, true);
         }
     </script>
 </head>
+
 <body style="background-color: white;">
     <div id="header">
-        <a id="sets" href='/setsPage' style="padding:0px; border:0px;"><img src="images/sets.png" alt="sets"></a>
-        <a id="terms" href='/termsPage' style=" position:absolute; left:5%; border: 0px;"><img src="images/terms.png" alt="terms"></a>
-        <a id="login" href='/loginPage' style="position:absolute; left:90%; padding: 0%; border: 0%;"><img src="images/login.png" alt="login"></a>
-        <a id="signup" href='/signUpPage' style="position:absolute; left:80%; padding:0px; border:0px;"><img src="images/signup.png" alt="signup"></a>
+        <a id="sets" href='/setsPage' style="padding:0px; border:0px;">
+            <img src="images/sets.png" alt="sets">
+        </a>
+        <a id="terms" href='/termsPage' style=" position:absolute; left:5%; border: 0px;">
+            <img src="images/terms.png" alt="terms">
+        </a>
+        <a id="login" href='/loginPage' style="position:absolute; left:90%; padding: 0%; border: 0%;">
+            <img src="images/login.png" alt="login">
+        </a>
+        <a id="signup" href='/signUpPage' style="position:absolute; left:80%; padding:0px; border:0px;">
+            <img src="images/signup.png" alt="signup">
+        </a>
     </div>
     <h2>Login</h2>
-    <form id="a" method="POST" action="/loginPage/login">
+    <form id="a" method="POST" action="loginPage/login">
         <input type="text" name="userName" placeholder="userName">
         <input type="password" name="pw" placeholder="pw">
         <input type="image" src="images/login.png" alt="login" />
     </form>
     <p id="infoP"></p>
 </body>
+
 </html>
