@@ -4,17 +4,22 @@
     <title>Login</title>
     <script type="text/javascript">
         function checkLoginSuccess() {
-            console.log("Run");
-            var init = {
-                method: 'POST',
-                mode: 'no-cors',
-            };
             var xhr = new XMLHttpRequest();
             xhr.open('GET', '/loginPage/login', true);
             xhr.onload = function() {
-                console.log(xhr.responseText);
                 var jsonResp = JSON.parse(xhr.responseText);
-                console.log(jsonResp);
+                switch (jsonResp.loginsuccess) {
+                    case 0:
+                        document.getElementById("infoP").innerHTML = "Incorrect Username";
+                        break;
+                    case 1:
+                        document.cookie = "uID=", jsonResp.UID;
+                        window.location = "setsPage.html";
+                        break;
+                    case 2:
+                        document.getElementById("infoP").innerHTML = "Incorrect Password";
+                        break;
+                }
             };
             xhr.send();
         }
