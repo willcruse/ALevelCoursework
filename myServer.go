@@ -35,7 +35,6 @@ func main() {
 	mux.HandleFunc("/signUpPage", signUpPage)
 	mux.HandleFunc("/loginPage/uIDRequest", uIDPost)
 	mux.HandleFunc("/loginPage/login", login)
-	mux.HandleFunc("/test", testFunc)
 	err := server.ListenAndServe()
 	if err != nil {
 		panic(err)
@@ -85,8 +84,8 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 		http.ServeFile(res, req, "loginPage.html")
 		return
 	}
-	client.uName = req.FormValue("userName")
-	client.pw = req.FormValue("pw")
+	/**client.uName = req.FormValue("userName")
+	client.pw = req.FormValue("pw")**/
 	http.ServeFile(res, req, "loginPage.html")
 }
 
@@ -121,26 +120,31 @@ func uIDPost(res http.ResponseWriter, req *http.Request) {
 }
 
 func login(res http.ResponseWriter, req *http.Request) {
-	if req.Method != "POST" {
-		http.ServeFile(res, req, "loginPage.html")
-	}
 	type Success struct {
 		Succ int `json:"loginsuccess"`
-		uID  int `json:"UID"`
+		UID  int `json:"UID"`
 	}
+	body := req.Body
+	defer body.Close()
+	for i := 0; i < 100; i++ {
+		fmt.Println(body)
+	}
+	uName := req.FormValue("uName")
+	pw := req.FormValue("pw")
 	var data []string
 	var uID int
-	data, uID = dbOperations.UserDataUname(client.uName)
+	data, uID = dbOperations.UserDataUname(uName)
 	fmt.Println(data)
 	if len(data) == 0 { //incorrect userName
 		loginSuccess = 0
-	} else if client.pw == data[1] { //login
+	} else if pw == data[1] { //login
 		loginSuccess = 1
 	} else { //incorrect pw
 		loginSuccess = 2
 	}
-	success := &Success{
-		uID:  uID,
+	var success Success
+	success = Success{
+		UID:  uID,
 		Succ: loginSuccess}
 	js, err := json.Marshal(success)
 	if err != nil {
@@ -149,10 +153,6 @@ func login(res http.ResponseWriter, req *http.Request) {
 	}
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(js)
-	return
-}
-
-func testFunc(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("tested"))
+	fmt.Println(string(js))
 	return
 }

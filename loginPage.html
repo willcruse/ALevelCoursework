@@ -4,12 +4,12 @@
     <title>Login</title>
     <script type="text/javascript">
         function checkLoginSuccess() {
-            
+            console.log("Run");
             var init = {
                 method: 'POST',
                 mode: 'no-cors',
             };
-            fetch("127.0.0.1:8080/loginPage/login", init)
+            /**fetch("127.0.0.1:8080/loginPage/login", init)
                 .then(function(response) {
                     if (!response.ok()) {
                         console.log("not ok");
@@ -27,16 +27,25 @@
                     var i = JSON.parse(res);
                     console.log(i);
                 })
-               .catch(function(error) {
+                .catch(function(error) {
                     console.log(error);
                 });
+        }**/
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/loginPage/login', true);
+            xhr.onload = function() {
+                console.log(xhr.responseText);
+                var jsonResp = JSON.parse(xhr.responseText);
+                console.log(jsonResp);
+            };
+            xhr.send();
         }
     </script>
     <script>
-        window.onload = function() {
-            var form = document.getElementById("a");
-            form.addEventListener('submit', checkLoginSuccess, true);
-        }
+        /**window.onload = function() {
+                            var form = document.getElementById("a");
+                            form.addEventListener('submit', checkLoginSuccess, true);
+                        }**/
     </script>
 </head>
 
@@ -48,7 +57,7 @@
         <a id="signup" href='/signUpPage' style="position:absolute; left:80%; padding:0px; border:0px;"><img src="images/signup.png" alt="signup"></a>
     </div>
     <h2>Login</h2>
-    <form id="a" method="POST" action="/loginPage/login">
+    <form id="a" method="POST" action="javascript:checkLoginSuccess();">
         <input type="text" name="userName" placeholder="userName">
         <input type="password" name="pw" placeholder="pw">
         <input type="image" src="images/login.png" alt="login" />
