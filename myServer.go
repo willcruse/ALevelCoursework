@@ -84,8 +84,6 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 		http.ServeFile(res, req, "loginPage.html")
 		return
 	}
-	/**client.uName = req.FormValue("userName")
-	client.pw = req.FormValue("pw")**/
 	http.ServeFile(res, req, "loginPage.html")
 }
 
@@ -126,13 +124,13 @@ func login(res http.ResponseWriter, req *http.Request) {
 	}
 	uName := req.FormValue("uName")
 	pw := req.FormValue("pw")
-	var data []string
+	var pwR string
 	var uID int
-	data, uID = dbOperations.UserDataUname(uName)
-	fmt.Println(data)
-	if len(data) == 0 { //incorrect userName
+	pwR, uID = dbOperations.UserDataUname(uName)
+	fmt.Println(pwR)
+	if pwR == "" { //incorrect userName
 		loginSuccess = 0
-	} else if pw == data[1] { //login
+	} else if pw == pwR { //login
 		loginSuccess = 1
 	} else { //incorrect pw
 		loginSuccess = 2
