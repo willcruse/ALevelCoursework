@@ -124,11 +124,6 @@ func login(res http.ResponseWriter, req *http.Request) {
 		Succ int `json:"loginsuccess"`
 		UID  int `json:"UID"`
 	}
-	body := req.Body
-	defer body.Close()
-	for i := 0; i < 100; i++ {
-		fmt.Println(body)
-	}
 	uName := req.FormValue("uName")
 	pw := req.FormValue("pw")
 	var data []string
