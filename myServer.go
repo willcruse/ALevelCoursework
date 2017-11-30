@@ -34,8 +34,7 @@ func main() {
 	mux.HandleFunc("/loginPage", loginPage)
 	mux.HandleFunc("/signUpPage", signUpPage)
 	mux.HandleFunc("/loginPage/uIDRequest", uIDPost)
-	//mux.HandleFunc("/loginPage/login", login)
-	mux.HandleFunc("/test", testFunc)
+	mux.HandleFunc("/loginPage/login", login)
 	err := server.ListenAndServe()
 	if err != nil {
 		panic(err)
@@ -80,7 +79,13 @@ func termsPage(res http.ResponseWriter, req *http.Request) { //makes new terms
 	http.ServeFile(res, req, "termsPage.html")
 }
 
-/**func loginPage(res http.ResponseWriter, req *http.Request) {
+func loginPage(res http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		http.ServeFile(res, req, "loginPage.html")
+		return
+	}
+	/**client.uName = req.FormValue("userName")
+	client.pw = req.FormValue("pw")**/
 	http.ServeFile(res, req, "loginPage.html")
 }**/
 
@@ -114,29 +119,26 @@ func uIDPost(res http.ResponseWriter, req *http.Request) {
 	return
 }
 
-func loginPage(res http.ResponseWriter, req *http.Request) {
-	if req.Method != "POST" {
-		http.ServeFile(res, req, "loginPage.html")
-	}
+func login(res http.ResponseWriter, req *http.Request) {
 	type Success struct {
 		Succ int `json:"loginsuccess"`
 		UID  int `json:"UID"`
 	}
+	uName := req.FormValue("uName")
+	pw := req.FormValue("pw")
 	var data []string
 	var uID int
-	client.uName = req.FormValue("userName")
-	client.pw = req.FormValue("pw")
-	fmt.Println(client.uName)
-	data, uID = dbOperations.UserDataUname(client.uName)
+	data, uID = dbOperations.UserDataUname(uName)
 	fmt.Println(data)
 	if len(data) == 0 { //incorrect userName
 		loginSuccess = 0
-	} else if client.pw == data[1] { //login
+	} else if pw == data[1] { //login
 		loginSuccess = 1
 	} else { //incorrect pw
 		loginSuccess = 2
 	}
-	success := &Success{
+	var success Success
+	success = Success{
 		UID:  uID,
 		Succ: loginSuccess}
 	js, err := json.Marshal(success)
@@ -146,10 +148,6 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 	}
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(js)
-	return
-}
-
-func testFunc(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("tested"))
+	fmt.Println(string(js))
 	return
 }

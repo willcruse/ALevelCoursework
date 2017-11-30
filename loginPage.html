@@ -4,66 +4,24 @@
     <title>Login</title>
     <script type="text/javascript">
         function checkLoginSuccess() {
-
-            /**var init = {
-                method: 'POST',
-                mode: 'cors',
-            };
-            fetch("./login", init)
-                .then(
-                    function(response) {
-                    if (response.status != 200) {
-                        console.log(response.status);
-                    }
-
-                    var contentType = response.headers.get("content-type");
-                    if (contentType && contentType.includes("application/json")) {
-                        console.log(response.json());
-                        return response.json();
-                    }
-                    throw new TypeError("Oops, we haven't got JSON!"); 
-                    response.json().then(function(data) {
-        console.log(data);
-
-                })
-               /** .then(function(response) {
-                    console.log("trig");
-                    var res = response.json;
-                    console.log(res);
-                    var i = JSON.parse(res);
-                    console.log(i);
-                }) 
-               .catch(function(error) {
-                    console.log(error);
-                }); **/
-                var init = {
-                method: 'GET',
-                mode: 'no-cors',
-            };
-            fetch('/loginPage')
-                .then(
-                function (response) {
-                    if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ' +
-                            response.status);
-                        return;
-                    }
-
-                    // Examine the text in the response
-                    response.json().then(function (data) {
-                        console.log(data);
-                    });
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/loginPage/login', true);
+            xhr.onload = function() {
+                var jsonResp = JSON.parse(xhr.responseText);
+                switch (jsonResp.loginsuccess) {
+                    case 0:
+                        document.getElementById("infoP").innerHTML = "Incorrect Username";
+                        break;
+                    case 1:
+                        document.cookie = "uID=", jsonResp.UID;
+                        window.location = "setsPage.html";
+                        break;
+                    case 2:
+                        document.getElementById("infoP").innerHTML = "Incorrect Password";
+                        break;
                 }
-                )
-                .catch(function (err) {
-                    console.log('Fetch Error ', err);
-                });
-        }
-    </script>
-    <script>
-        window.onload = function () {
-            var form = document.getElementById("a");
-            form.addEventListener('submit', checkLoginSuccess, true);
+            };
+            xhr.send();
         }
     </script>
 </head>
@@ -84,7 +42,7 @@
         </a>
     </div>
     <h2>Login</h2>
-    <form id="a" method="POST" action="loginPage">
+    <form id="a" action="javascript:checkLoginSuccess();">
         <input type="text" name="userName" placeholder="userName">
         <input type="password" name="pw" placeholder="pw">
         <input type="image" src="images/login.png" alt="login" />
