@@ -2,14 +2,20 @@
 
 <head>
     <title>New Set</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 
-<body style="background-color: white;">
-    <div id="header">
-        <button id="sets" onClick="location.href='setsPage.html'" style="padding:0px; border:0px;"><img src="images/sets.png" alt="sets"></button>
-        <button id="terms" onclick="location.href='termsPage.html'" style=" padding: 0px; border: 0px;"><img src="images/terms.png" alt="terms"></button>
-        <button id="login" onClick="location.href='loginPage.html'" style="position:absolute; left:1850px; padding: 0px; border: 0px;"><img src="images/login.png" alt="login"></button>
-        <button id="signup" onClick="location.href='signUpPage.html'" style="position:absolute; left:1760px; padding:0px; border:0px;"><img src="images/signup.png" alt="signup"></button>
+<body>
+    <div id="nav">
+        <a class="link" id="home" href="/">Home</a>
+        </br>
+        <a class="link" id="sets" href='/setsPage'>Sets</a>
+        </br>
+        <a class="link" id="terms" href='/termsPage'>Terms</a>
+        </br>
+        <a class="link" id="login" href='/loginPage'>Login</a>
+        </br>
+        <a class="link" id="signup" href='/signUpPage'>SignUp</a>
     </div>
     <div id="newSet">
         <form method="POST" action="/setsPage">

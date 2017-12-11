@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -35,6 +36,8 @@ func main() {
 	mux.HandleFunc("/signUpPage", signUpPage)
 	mux.HandleFunc("/loginPage/uIDRequest", uIDPost)
 	mux.HandleFunc("/loginPage/login", login)
+	mux.HandleFunc("/setsPage/getSets", getSets)
+	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	err := server.ListenAndServe()
 	if err != nil {
 		panic(err)
@@ -127,8 +130,8 @@ func login(res http.ResponseWriter, req *http.Request) {
 	var pwR string
 	var uID int
 	pwR, uID = dbOperations.UserDataUname(uName)
-	fmt.Println(pwR)
-	if pwR == "" { //incorrect userName
+	fmt.Println("PWR", pwR)
+	if pwR == "notFound" { //incorrect userName
 		loginSuccess = 0
 	} else if pw == pwR { //login
 		loginSuccess = 1
@@ -148,4 +151,12 @@ func login(res http.ResponseWriter, req *http.Request) {
 	res.Write(js)
 	fmt.Println(string(js))
 	return
+}
+
+func getSets(res http.ResponseWriter, req *http.Request) {
+	body, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(string(body))
 }
