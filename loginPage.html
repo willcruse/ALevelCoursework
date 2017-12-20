@@ -6,7 +6,15 @@
     <script type="text/javascript">
         function checkLoginSuccess() {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/loginPage/login', true);
+            var uName = document.getElementById("uName").value;
+            var pw = document.getElementById("pw").value;
+            var obj = new Object();
+            obj.uName = uName;
+            obj.pw = pw;
+            var json = JSON.stringify(obj);
+            console.log("JSON", json);
+            xhr.open('POST', '/loginPage/login', true);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
             xhr.onload = function() {
                 var jsonResp = JSON.parse(xhr.responseText);
                 switch (jsonResp.loginsuccess) {
@@ -22,7 +30,7 @@
                         break;
                 }
             };
-            xhr.send();
+            xhr.send(json);
         }
     </script>
 </head>
@@ -41,8 +49,8 @@
     </div>
     <h2>Login</h2>
     <form id="a" action="javascript:checkLoginSuccess();">
-        <input type="text" name="userName" placeholder="userName">
-        <input type="password" name="pw" placeholder="pw">
+        <input id="uName" type="text" name="userName" placeholder="userName">
+        <input id="pw" type="password" name="pw" placeholder="pw">
         <input type="image" src="images/login.png" alt="login" />
     </form>
     <p id="infoP"></p>

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 
@@ -121,21 +122,33 @@ func uIDPost(res http.ResponseWriter, req *http.Request) {
 }
 
 func login(res http.ResponseWriter, req *http.Request) {
+	type rec struct {
+		UName string
+		Pw    string
+	}
 	type Success struct {
 		Succ int `json:"loginsuccess"`
 		UID  int `json:"UID"`
 	}
-	uName := req.FormValue("uName")
-	pw := req.FormValue("pw")
+	decoder := json.NewDecoder(req.Body)
+	var recS rec
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	fmt.Println(recS)
+	uName := recS.UName
+	pw := recS.Pw
 	var pwR string
 	var uID int
+	fmt.Println("uName", uName)
 	pwR, uID = dbOperations.UserDataUname(uName)
 	fmt.Println("PWR", pwR)
 	if pwR == "notFound" { //incorrect userName
 		loginSuccess = 0
+		fmt.Println("notFound")
 	} else if pw == pwR { //login
 		loginSuccess = 1
 	} else { //incorrect pw
+		fmt.Println("User PW ", pw, "\n  DB PW ", pwR)
 		loginSuccess = 2
 	}
 	var success Success
@@ -159,4 +172,10 @@ func getSets(res http.ResponseWriter, req *http.Request) {
 		fmt.Println(err)
 	}
 	fmt.Println(string(body))
+}
+
+func checkErr(e error) {
+	if e != nil {
+		log.Fatal(e)
+	}
 }

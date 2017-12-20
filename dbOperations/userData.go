@@ -40,7 +40,6 @@ func UserDataUname(uName string) (string, int) {
 	errCon := db.Ping()
 	checkError(errCon)
 	rows, err := db.Query("SELECT uID, pw FROM users WHERE uName=?", uName)
-	fmt.Println("Error", err)
 	if err == sql.ErrNoRows {
 		fmt.Println("No rows")
 		return pw, uID
@@ -50,11 +49,13 @@ func UserDataUname(uName string) (string, int) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var uIDl = -1
-		var pwl = "notFound"
-		err = rows.Scan(&uID, &pw)
+		fmt.Println("trig")
+		var uIDl int
+		var pwl string
+		err = rows.Scan(&uIDl, &pwl)
 		checkError(err)
-		fmt.Println("PW", pw)
+		fmt.Println("PW DB", pwl)
+		fmt.Println("uID DB", uIDl)
 		return pwl, uIDl
 	}
 
