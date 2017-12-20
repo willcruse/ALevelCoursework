@@ -49,13 +49,10 @@ func UserDataUname(uName string) (string, int) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		fmt.Println("trig")
 		var uIDl int
 		var pwl string
 		err = rows.Scan(&uIDl, &pwl)
 		checkError(err)
-		fmt.Println("PW DB", pwl)
-		fmt.Println("uID DB", uIDl)
 		return pwl, uIDl
 	}
 

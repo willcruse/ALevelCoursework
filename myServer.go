@@ -134,12 +134,10 @@ func login(res http.ResponseWriter, req *http.Request) {
 	var recS rec
 	err := decoder.Decode(&recS)
 	checkErr(err)
-	fmt.Println(recS)
 	uName := recS.UName
 	pw := recS.Pw
 	var pwR string
 	var uID int
-	fmt.Println("uName", uName)
 	pwR, uID = dbOperations.UserDataUname(uName)
 	fmt.Println("PWR", pwR)
 	if pwR == "notFound" { //incorrect userName
@@ -148,7 +146,7 @@ func login(res http.ResponseWriter, req *http.Request) {
 	} else if pw == pwR { //login
 		loginSuccess = 1
 	} else { //incorrect pw
-		fmt.Println("User PW ", pw, "\n  DB PW ", pwR)
+
 		loginSuccess = 2
 	}
 	var success Success
