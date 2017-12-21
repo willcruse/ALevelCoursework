@@ -3,3 +3,11 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     line-height: 25px;
 }
+
+#nav {
+    width: 25%;
+}
+
+#page {
+    margin-left: 25%;
+}

@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Sign Up</title>
+    <title>Teacher Tools</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 
@@ -16,14 +16,15 @@
         <a class="link" id="login" href='/loginPage'>Login</a>
         </br>
         <a class="link" id="signup" href='/signUpPage'>SignUp</a>
+        </br>
+        <a class="link" id="teacherTools" href='/teacherTools'>Teacher Tools</a>
     </div>
-    <h2>Sign Up</h2>
-    <form method="POST" action="/signUpPage ">
-        <input type="text " name="userName " placeholder="userName ">
-        <input type="password " name="pw " placeholder="pw ">
-        <input type="text " name="email " placeholder="email ">
-        <input type="submit" value="Submit">
-    </form>
+    <div id="page">
+        <div id="select">
+            <a class="link" id="stopwatch" href="/teachertools/stopwatch">Stopwatch</a>
+            <a class="link" id="timer" href="/teachertools/timer">Timer</a>
+        </div>
+    </div>
 </body>
 
 </html>

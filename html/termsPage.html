@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-
 <html>
 
 <head>
-    <title>Main Page</title>
+    <title>Terms Page</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 
@@ -18,11 +16,18 @@
         <a class="link" id="login" href='/loginPage'>Login</a>
         </br>
         <a class="link" id="signup" href='/signUpPage'>SignUp</a>
+        </br>
+        <a class="link" id="teacherTools" href='/teacherTools'>Teacher Tools</a>
     </div>
-    <div id="mainBody">
-        <p>THIS IS THE FRONT PAGE</p>
+    <div id="page"></div>
+    <h2>Add new term</h2>
+    <form method="POST" action="/setsPage">
+        <input type="text" name="setName" placeholder="setName">
+        <input type="text" name="termA" placeholder="termA">
+        <input type="text" name="termB" placeholder="termB">
+        <input type="submit" value="TermsPage">
+    </form>
     </div>
-
 </body>
 
 </html>

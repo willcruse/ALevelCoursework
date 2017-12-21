@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/willcruse/ComputingCoursework/dbOperations"
@@ -35,9 +35,12 @@ func main() {
 	mux.HandleFunc("/termsPage", termsPage)
 	mux.HandleFunc("/loginPage", loginPage)
 	mux.HandleFunc("/signUpPage", signUpPage)
-	mux.HandleFunc("/loginPage/uIDRequest", uIDPost)
+	mux.HandleFunc("/teacherTools", teacherTools)
 	mux.HandleFunc("/loginPage/login", login)
 	mux.HandleFunc("/setsPage/getSets", getSets)
+	mux.HandleFunc("/teachertools/timer", timer)
+	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
+	mux.Handle("/teacherScripts/", http.StripPrefix("/teacherScripts", http.FileServer(http.Dir("teacherScripts"))))
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	err := server.ListenAndServe()
 	if err != nil {
@@ -47,17 +50,17 @@ func main() {
 
 //Page Functions
 func homePage(res http.ResponseWriter, req *http.Request) {
-	http.ServeFile(res, req, "index.html")
+	http.ServeFile(res, req, "html/index.html")
 }
 
 func setsPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
-		http.ServeFile(res, req, "setsPage.html")
+		http.ServeFile(res, req, "html/setsPage.html")
 		return
 	}
-	if uID == -1 {
+	if uID == -1 { //TODO change to cookie req
 		fmt.Println("Not logged in")
-		http.ServeFile(res, req, "signUpPage.html")
+		http.ServeFile(res, req, "html/signUpPage.html")
 	}
 	setName := req.FormValue("setName")
 	termA := req.FormValue("termA")
@@ -69,31 +72,31 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 
 func termsPage(res http.ResponseWriter, req *http.Request) { //makes new terms
 	if req.Method != "POST" {
-		http.ServeFile(res, req, "termsPage.html")
+		http.ServeFile(res, req, "html/termsPage.html")
 		return
 	}
-	if uID == -1 {
+	if uID == -1 { //TODO change to cookie req
 		fmt.Println("Not logged in")
-		http.ServeFile(res, req, "signUpPage.html")
+		http.ServeFile(res, req, "html/signUpPage.html")
 	}
 	setName := req.FormValue("setName")
 	termA := req.FormValue("termA")
 	termB := req.FormValue("termB")
 	dbOperations.TermsExisting(termA, termB, setName, uID)
-	http.ServeFile(res, req, "termsPage.html")
+	http.ServeFile(res, req, "html/termsPage.html")
 }
 
 func loginPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
-		http.ServeFile(res, req, "loginPage.html")
+		http.ServeFile(res, req, "html/loginPage.html")
 		return
 	}
-	http.ServeFile(res, req, "loginPage.html")
+	http.ServeFile(res, req, "html/loginPage.html")
 }
 
 func signUpPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
-		http.ServeFile(res, req, "signUpPage.html")
+		http.ServeFile(res, req, "html/signUpPage.html")
 		return
 	}
 	uName := req.FormValue("userName")
@@ -109,16 +112,9 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 	case 2:
 		result = "User Added"
 		fmt.Println("ADDED USER")
-		http.ServeFile(res, req, "loginPage.html")
+		http.ServeFile(res, req, "html/loginPage.html")
 	}
 	fmt.Println(result)
-}
-
-func uIDPost(res http.ResponseWriter, req *http.Request) {
-	fmt.Println("UID TRIG")
-	uIDbyte := []byte(string(client.uID))
-	res.Write(uIDbyte)
-	return
 }
 
 func login(res http.ResponseWriter, req *http.Request) {
@@ -165,11 +161,32 @@ func login(res http.ResponseWriter, req *http.Request) {
 }
 
 func getSets(res http.ResponseWriter, req *http.Request) {
-	body, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		fmt.Println(err)
+	type uidStuct struct {
+		UID string
 	}
-	fmt.Println(string(body))
+	var uIDs uidStuct
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&uIDs)
+	checkErr(err)
+	fmt.Println(uIDs.UID)
+	uIDInt, err := strconv.Atoi(uIDs.UID)
+	checkErr(err)
+	data, err := dbOperations.GetSets(uIDInt)
+	checkErr(err)
+	fmt.Println(data)
+
+}
+
+func teacherTools(res http.ResponseWriter, req *http.Request) {
+	http.ServeFile(res, req, "html/teachertools.html")
+}
+
+func timer(res http.ResponseWriter, req *http.Request) {
+	http.ServeFile(res, req, "html/timer.html")
+}
+
+func stopWatch(res http.ResponseWriter, req *http.Request) {
+	http.ServeFile(res, req, "html/stopWatch.html")
 }
 
 func checkErr(e error) {

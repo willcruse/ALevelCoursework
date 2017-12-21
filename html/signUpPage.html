@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Terms Page</title>
+    <title>Sign Up</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 
@@ -16,14 +16,18 @@
         <a class="link" id="login" href='/loginPage'>Login</a>
         </br>
         <a class="link" id="signup" href='/signUpPage'>SignUp</a>
+        </br>
+        <a class="link" id="teacherTools" href='/teacherTools'>Teacher Tools</a>
     </div>
-    <h2>Add new term</h2>
-    <form method="POST" action="/setsPage">
-        <input type="text" name="setName" placeholder="setName">
-        <input type="text" name="termA" placeholder="termA">
-        <input type="text" name="termB" placeholder="termB">
-        <input type="submit" value="TermsPage">
-    </form>
+    <div id="page">
+        <h2>Sign Up</h2>
+        <form method="POST" action="/signUpPage ">
+            <input type="text " name="userName " placeholder="userName ">
+            <input type="password " name="pw " placeholder="pw ">
+            <input type="text " name="email " placeholder="email ">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
 </body>
 
 </html>

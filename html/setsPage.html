@@ -1,0 +1,38 @@
+<html>
+
+<head>
+    <title>Set Page</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/scripts/getSetsJS.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="nav">
+        <a class="link" id="home" href="/">Home</a>
+        </br>
+        <a class="link" id="sets" href='/setsPage'>Sets</a>
+        </br>
+        <a class="link" id="terms" href='/termsPage'>Terms</a>
+        </br>
+        <a class="link" id="login" href='/loginPage'>Login</a>
+        </br>
+        <a class="link" id="signup" href='/signUpPage'>SignUp</a>
+        </br>
+        <a class="link" id="teacherTools" href='/teacherTools'>Teacher Tools</a>
+    </div>
+    <div id="page">
+        <button id="newSetsButton" onclick="newSet()">New Set</button>
+        <script>
+            function newSet() {
+                var newSetsWindow = window.open("", null, "height=200, width=400");
+                newSetsWindow.document.write(" <form method='POST' action='javascript:sendSets();'><input type='text' name='setName' placeholder='setName'><input type='text' name='termA' placeholder='termA'><input type='text' name='termB' placeholder='termB'><input type='submit' value='SetsPage'> </form>");
+            }
+        </script>
+        <div id="setsTable">
+            <h2>My Sets</h2>
+            <table id="mySetsTable"></table>
+        </div>
+    </div>
+</body>
+
+</html>

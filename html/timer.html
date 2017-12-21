@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Timer</title>
+
+<head>
+    <script src="/teacherScripts/timer.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/timerstylesheet.css">
+    <link rel="stylesheet" type="text/css" href="/css/stylesheet.css">
+</head>
+
+<body>
+    <div id="nav">
+        <a class="link" id="home" href="/">Home</a>
+        </br>
+        <a class="link" id="sets" href='/setsPage'>Sets</a>
+        </br>
+        <a class="link" id="terms" href='/termsPage'>Terms</a>
+        </br>
+        <a class="link" id="login" href='/loginPage'>Login</a>
+        </br>
+        <a class="link" id="signup" href='/signUpPage'>SignUp</a>
+        </br>
+        <a class="link" id="teacherTools" href='/teacherTools'>Teacher Tools</a>
+    </div>
+    <div id="page">
+        <div id="increaseButtons">
+            <button id="h2I" onclick="increase(h2Im)">Up</button>
+            <button id="h1I" onclick="increase(h1Im)">Up</button>
+            <button id="m2I" onclick="increase(m2Im)">Up</button>
+            <button id="m1I" onclick="increase(m1Im)">Up</button>
+            <button id="s2I" onclick="increase(s2Im)">Up</button>
+            <button id="s1I" onclick="increase(s1Im)">Up</button>
+        </div>
+        <div id="TimerNumbers">
+            <p id="timerP"></p>
+            <p id="h2Im">0</p>
+            <p id="h1Im">0</p>
+            <p id="emptyP"> : </p>
+            <p id="m2Im">0</p>
+            <p id="m1Im">0</p>
+            <p id="emptyP1"> : </p>
+            <p id="s2Im">0</p>
+            <p id="s1Im">0</p>
+        </div>
+        <div id="decreaseButtons">
+            <button id="h2D" onclick="decrease(h2Im)">Down</button>
+            <button id="h1D" onclick="decrease(h1Im)">Down</button>
+            <button id="m2D" onclick="decrease(m2Im)">Down</button>
+            <button id="m1D" onclick="decrease(m1Im)">Down</button>
+            <button id="s2D" onclick="decrease(s2Im)">Down</button>
+            <button id="s1D" onclick="decrease(s1Im)">Down</button>
+        </div>
+        <div id="TimerButtons">
+            <button id="start" onclick="startTimer()">Start</button>
+            <button id="stop" onclick="stopTimer()">Stop</button>
+            <button id="reset" onclick="resetTimer()">Reset</button>
+        </div>
+        <br>
+    </div>
+</body>
+
+</html>

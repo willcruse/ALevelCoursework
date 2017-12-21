@@ -1,0 +1,50 @@
+body {
+    background-color: lightgoldenrodyellow;
+
+}
+
+#SWP {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 144px;
+    color: black;
+
+}
+#start {
+    margin: 25px;
+    font-size: 50px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding: 25px;
+    border-radius: 25px;
+    color: limegreen;
+}
+
+#stop {
+    margin: 25px;
+    font-size: 50px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding: 25px;
+    border-radius: 25px;
+    color: darkred;
+}
+
+#reset {
+    margin: 25px;
+    font-size: 50px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding: 25px;
+    border-radius: 25px;
+    color: orangered;
+}
+
+#SWButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 25px;
+}
+
+#SWNumbers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
