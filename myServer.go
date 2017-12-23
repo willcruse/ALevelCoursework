@@ -11,16 +11,6 @@ import (
 	"github.com/willcruse/ComputingCoursework/dbOperations"
 )
 
-type clientInfo struct {
-	uID   int
-	uName string
-	pw    string
-}
-
-var uID = -1
-var client clientInfo
-var loginSuccess = 0
-
 //Main Function
 func main() {
 	mux := http.NewServeMux()
@@ -42,6 +32,7 @@ func main() {
 	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
 	mux.Handle("/teacherScripts/", http.StripPrefix("/teacherScripts", http.FileServer(http.Dir("teacherScripts"))))
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
+	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
 	err := server.ListenAndServe()
 	if err != nil {
 		panic(err)
@@ -58,16 +49,32 @@ func setsPage(res http.ResponseWriter, req *http.Request) {
 		http.ServeFile(res, req, "html/setsPage.html")
 		return
 	}
-	if uID == -1 { //TODO change to cookie req
+	type rec struct {
+		UID string
+	}
+	type send struct {
+		Sets [][]string `json:"sets"`
+	}
+	decoder := json.NewDecoder(req.Body)
+	var recS rec
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	uID, err := strconv.Atoi(recS.UID)
+	checkErr(err)
+	if uID == -1 {
 		fmt.Println("Not logged in")
 		http.ServeFile(res, req, "html/signUpPage.html")
 	}
-	setName := req.FormValue("setName")
-	termA := req.FormValue("termA")
-	termB := req.FormValue("termB")
-	setID := dbOperations.NewSet(setName, uID)
-	dbOperations.NewTerm(termA, termB, setID)
-	http.ServeFile(res, req, "setsPage.html")
+	sets, err := dbOperations.GetSets(uID)
+	checkErr(err)
+	sendS := send{sets}
+	dataJS, err := json.Marshal(sendS)
+	checkErr(err)
+	fmt.Println(string(dataJS))
+	fmt.Println(sets)
+	res.Header().Set("Content-Type", "application/json")
+	res.Write(dataJS)
+	return
 }
 
 func termsPage(res http.ResponseWriter, req *http.Request) { //makes new terms
@@ -75,7 +82,16 @@ func termsPage(res http.ResponseWriter, req *http.Request) { //makes new terms
 		http.ServeFile(res, req, "html/termsPage.html")
 		return
 	}
-	if uID == -1 { //TODO change to cookie req
+	type rec struct {
+		UID string
+	}
+	decoder := json.NewDecoder(req.Body)
+	var recS rec
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	uID, err := strconv.Atoi(recS.UID)
+	checkErr(err)
+	if uID == -1 {
 		fmt.Println("Not logged in")
 		http.ServeFile(res, req, "html/signUpPage.html")
 	}
@@ -118,6 +134,7 @@ func signUpPage(res http.ResponseWriter, req *http.Request) {
 }
 
 func login(res http.ResponseWriter, req *http.Request) {
+	var loginSuccess int
 	type rec struct {
 		UName string
 		Pw    string
@@ -139,7 +156,7 @@ func login(res http.ResponseWriter, req *http.Request) {
 	if pwR == "notFound" { //incorrect userName
 		loginSuccess = 0
 		fmt.Println("notFound")
-	} else if pw == pwR { //login
+	} else if pw == pwR { //login as pw match
 		loginSuccess = 1
 	} else { //incorrect pw
 

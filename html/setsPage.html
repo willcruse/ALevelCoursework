@@ -3,7 +3,37 @@
 <head>
     <title>Set Page</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <script src="/scripts/getSetsJS.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        window.onload = getSets();
+
+        function getSets() {
+            var uID = -1;
+            var x = decodeURIComponent(document.cookie);
+            var split = x.split(";")
+            var target = "uID=";
+            for (var i = 0; i < split.length; i++) {
+                var c = split[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+            }
+            if (c.indexOf(target) == 0) {
+                uID = c.substring(target.length, c.length);
+            }
+            var xhr = new XMLHttpRequest();
+            var obj = new Object();
+            obj.uID = uID;
+            var json = JSON.stringify(obj);
+            xhr.open('POST', '/setsPage/', true);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            xhr.onload = function() {
+                var jsonResp = JSON.parse(xhr.responseText);
+                console.log(jsonResp);
+            }
+            xhr.send(json);
+        }
+    </script>
+
 </head>
 
 <body>
