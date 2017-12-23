@@ -34,58 +34,56 @@ func main() {
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
 	err := server.ListenAndServe()
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 }
 
 //Page Functions
 func homePage(res http.ResponseWriter, req *http.Request) {
-	http.ServeFile(res, req, "html/index.html")
+	http.ServeFile(res, req, "html/index.html") //Just serves the file
 }
 
-func setsPage(res http.ResponseWriter, req *http.Request) {
-	if req.Method != "POST" {
+func setsPage(res http.ResponseWriter, req *http.Request) { //The function that is invoked when navigating to the sets page
+	if req.Method != "POST" { //Checks to see if the req is a POST request
 		http.ServeFile(res, req, "html/setsPage.html")
 		return
 	}
-	type rec struct {
+	type rec struct { //Struct to receive the UID
 		UID string
 	}
-	type send struct {
+	type send struct { //Struct to export for json
 		Sets [][]string `json:"sets"`
 	}
-	decoder := json.NewDecoder(req.Body)
+	decoder := json.NewDecoder(req.Body) //Makes new decoder --> Decodes JSON into receive struct --> converts the UDI string into an int
 	var recS rec
 	err := decoder.Decode(&recS)
 	checkErr(err)
 	uID, err := strconv.Atoi(recS.UID)
 	checkErr(err)
-	if uID == -1 {
+	if uID == -1 { //Checks to see if the user is logged in if not redirects to the sign up page --> I know this is annoying for user but its convinent to show why sets arent showing
 		fmt.Println("Not logged in")
 		http.ServeFile(res, req, "html/signUpPage.html")
 	}
-	sets, err := dbOperations.GetSets(uID)
+	sets, err := dbOperations.GetSets(uID) //Fetches sets using the uID
 	checkErr(err)
-	sendS := send{sets}
-	dataJS, err := json.Marshal(sendS)
+	sendS := send{sets}                //Makes a send struct containing the returned struct
+	dataJS, err := json.Marshal(sendS) //Turns into json
 	checkErr(err)
 	fmt.Println(string(dataJS))
 	fmt.Println(sets)
-	res.Header().Set("Content-Type", "application/json")
+	res.Header().Set("Content-Type", "application/json") //Sets headers --> Writes data
 	res.Write(dataJS)
 	return
 }
 
 func termsPage(res http.ResponseWriter, req *http.Request) { //makes new terms
-	if req.Method != "POST" {
+	if req.Method != "POST" { //Checks for POST
 		http.ServeFile(res, req, "html/termsPage.html")
 		return
 	}
-	type rec struct {
+	type rec struct { //Makes new struct to recieve into
 		UID string
 	}
-	decoder := json.NewDecoder(req.Body)
+	decoder := json.NewDecoder(req.Body) //New Decoder on the body of the request --> Decodes into rec struct --> Converts uID into int
 	var recS rec
 	err := decoder.Decode(&recS)
 	checkErr(err)
@@ -103,14 +101,14 @@ func termsPage(res http.ResponseWriter, req *http.Request) { //makes new terms
 }
 
 func loginPage(res http.ResponseWriter, req *http.Request) {
-	if req.Method != "POST" {
+	if req.Method != "POST" { //Serves file to client
 		http.ServeFile(res, req, "html/loginPage.html")
 		return
 	}
 	http.ServeFile(res, req, "html/loginPage.html")
 }
 
-func signUpPage(res http.ResponseWriter, req *http.Request) {
+func signUpPage(res http.ResponseWriter, req *http.Request) { //Gets users info and enters into db
 	if req.Method != "POST" {
 		http.ServeFile(res, req, "html/signUpPage.html")
 		return
