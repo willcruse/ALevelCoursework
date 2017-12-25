@@ -28,6 +28,8 @@
                     case 2:
                         document.getElementById("infoP").innerHTML = "Incorrect Password";
                         break;
+                    default:
+                        document.getElementById("infoP").innerHTML = "Oh dear";
                 }
             };
             xhr.send(json);

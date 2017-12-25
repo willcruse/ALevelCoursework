@@ -6,6 +6,6 @@ import (
 
 func checkError(err error) { //checks for errors
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }

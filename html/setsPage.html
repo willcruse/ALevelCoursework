@@ -5,7 +5,6 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script type="text/javascript">
         window.onload = getSets();
-
         function getSets() {
             var uID = -1;
             var x = decodeURIComponent(document.cookie);
@@ -24,13 +23,23 @@
             var obj = new Object();
             obj.uID = uID;
             var json = JSON.stringify(obj);
-            xhr.open('POST', '/setsPage/', true);
+            xhr.open('POST', '/setsPage', true);
             xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
             xhr.onload = function() {
                 var jsonResp = JSON.parse(xhr.responseText);
+                var jsonSets = jsonResp.sets;
+                if (jsonSets == null) {
+                    console.log("No Sets");
+                    return
+                }
                 console.log(jsonResp);
             }
             xhr.send(json);
+        }
+
+        function newSet(){
+            var iframe = document.getElementById("newSetIframe");
+            iframe.src = "/setsPage/newSetPage"
         }
     </script>
 
@@ -51,13 +60,8 @@
         <a class="link" id="teacherTools" href='/teacherTools'>Teacher Tools</a>
     </div>
     <div id="page">
-        <button id="newSetsButton" onclick="newSet()">New Set</button>
-        <script>
-            function newSet() {
-                var newSetsWindow = window.open("", null, "height=200, width=400");
-                newSetsWindow.document.write(" <form method='POST' action='javascript:sendSets();'><input type='text' name='setName' placeholder='setName'><input type='text' name='termA' placeholder='termA'><input type='text' name='termB' placeholder='termB'><input type='submit' value='SetsPage'> </form>");
-            }
-        </script>
+        <button id="newSetsButton" onclick="newSet();">New Set</button>
+        <iframe id="newSetIframe"></iframe>
         <div id="setsTable">
             <h2>My Sets</h2>
             <table id="mySetsTable"></table>

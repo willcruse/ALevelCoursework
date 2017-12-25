@@ -28,6 +28,8 @@ func main() {
 	mux.HandleFunc("/teacherTools", teacherTools)
 	mux.HandleFunc("/loginPage/login", login)
 	mux.HandleFunc("/setsPage/getSets", getSets)
+	mux.HandleFunc("/setsPage/newSets", newSets)
+	mux.HandleFunc("/setsPage/newSetPage", newSetsPage)
 	mux.HandleFunc("/teachertools/timer", timer)
 	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
 	mux.Handle("/teacherScripts/", http.StripPrefix("/teacherScripts", http.FileServer(http.Dir("teacherScripts"))))
@@ -62,6 +64,7 @@ func setsPage(res http.ResponseWriter, req *http.Request) { //The function that 
 	if uID == -1 { //Checks to see if the user is logged in if not redirects to the sign up page --> I know this is annoying for user but its convinent to show why sets arent showing
 		fmt.Println("Not logged in")
 		http.ServeFile(res, req, "html/signUpPage.html")
+		return
 	}
 	sets, err := dbOperations.GetSets(uID) //Fetches sets using the uID
 	checkErr(err)
@@ -192,6 +195,38 @@ func getSets(res http.ResponseWriter, req *http.Request) {
 
 }
 
+func newSets(res http.ResponseWriter, req *http.Request) {
+	type rec struct {
+		setName string
+		termA   string
+		termB   string
+		uID     int
+	}
+	log.Println("New sets TRIGGEREDDDD")
+	var recS rec
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	setID := dbOperations.NewSet(recS.setName, recS.uID)
+	suc := dbOperations.NewTerm(recS.termA, recS.termB, setID)
+	type send struct {
+		Succ int `json:"success"`
+	}
+	sendS := &send{suc}
+	if sendS.Succ == -10 {
+		log.Println("We have reached unreachable code")
+	}
+	json, err := json.Marshal(sendS)
+	checkErr(err)
+	res.Header().Set("Content-Type", "application/json")
+	res.Write(json)
+	return
+}
+
+func newSetsPage(res http.ResponseWriter, req *http.Request) {
+	http.ServeFile(res, req, "html/newSet.html")
+}
+
 func teacherTools(res http.ResponseWriter, req *http.Request) {
 	http.ServeFile(res, req, "html/teachertools.html")
 }
@@ -206,6 +241,6 @@ func stopWatch(res http.ResponseWriter, req *http.Request) {
 
 func checkErr(e error) {
 	if e != nil {
-		log.Fatal(e)
+		log.Println(e)
 	}
 }

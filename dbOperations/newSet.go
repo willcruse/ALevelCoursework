@@ -10,7 +10,7 @@ import (
 func NewSet(setName string, uID int) int64 { //function to create a new set
 	var db *sql.DB
 	var noRows error
-	db, err := sql.Open("mysql", "will:somePass@/educationWebsite")
+	db, err := sql.Open("mysql", "root:somePass@/educationWebsite")
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
@@ -34,5 +34,5 @@ func NewSet(setName string, uID int) int64 { //function to create a new set
 		return setID
 	}
 	fmt.Println(noRows) //If error prints it
-	return 1929         //unreachable code...
+	return -10          //unreachable code...
 }

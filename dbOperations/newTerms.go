@@ -3,23 +3,29 @@ package dbOperations
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	_ "github.com/go-sql-driver/mysql" //JUSTIFIED
 )
 
-func NewTerm(term1, term2 string, setID int64) { //Function to make new terms in db from a setID
+func NewTerm(term1, term2 string, setID int64) int { //Function to make new terms in db from a setID
 	var db *sql.DB
 	db, err := sql.Open("mysql", "root:somePass@/educationWebsite")
 	checkError(err)
+	setIDInt := int(setID)
 	defer db.Close()
 	errCon := db.Ping()
 	checkError(errCon)
 	checkError(err) //connects to db and checks for errors
 	stmtT, err := db.Prepare("INSERT INTO terms VALUES(?, ?, ?)")
 	checkError(err)
-	res2, err := stmtT.Exec(setID, term1, term2) //inserts the values into the db
-	checkError(err)
+	res2, err := stmtT.Exec(setIDInt, term1, term2) //inserts the values into the db
+	if err != nil {
+		log.Println(err)
+		return 0
+	}
 	fmt.Println(res2)
+	return 1
 }
 
 func TermsExisting(term1, term2, setName string, uID int) { //Func to make new terms in db from setName and uID
