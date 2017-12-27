@@ -153,14 +153,12 @@ func login(res http.ResponseWriter, req *http.Request) {
 	var pwR string
 	var uID int
 	pwR, uID = dbOperations.UserDataUname(uName)
-	fmt.Println("PWR", pwR)
 	if pwR == "notFound" { //incorrect userName
 		loginSuccess = 0
 		fmt.Println("notFound")
 	} else if pw == pwR { //login as pw match
 		loginSuccess = 1
 	} else { //incorrect pw
-
 		loginSuccess = 2
 	}
 	var success Success
@@ -174,7 +172,6 @@ func login(res http.ResponseWriter, req *http.Request) {
 	}
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(js)
-	fmt.Println(string(js))
 	return
 }
 
@@ -197,25 +194,33 @@ func getSets(res http.ResponseWriter, req *http.Request) {
 
 func newSets(res http.ResponseWriter, req *http.Request) {
 	type rec struct {
-		setName string
-		termA   string
-		termB   string
-		uID     int
+		SetName  string
+		TermA    string
+		TermB    string
+		UID      string
+		uIDTrans int
 	}
-	log.Println("New sets TRIGGEREDDDD")
 	var recS rec
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&recS)
 	checkErr(err)
-	setID := dbOperations.NewSet(recS.setName, recS.uID)
-	suc := dbOperations.NewTerm(recS.termA, recS.termB, setID)
+	recS.uIDTrans, err = strconv.Atoi(recS.UID)
+	checkErr(err)
+	setID := dbOperations.NewSet(recS.SetName, recS.uIDTrans)
+	var suc int
+	if setID == -10 {
+		log.Println("We have reached unreachable code")
+		suc = 1
+	} else if setID == -5 {
+		log.Println("Set already exists")
+		suc = 1
+	} else {
+		suc = dbOperations.NewTerm(recS.TermA, recS.TermB, setID)
+	}
 	type send struct {
 		Succ int `json:"success"`
 	}
 	sendS := &send{suc}
-	if sendS.Succ == -10 {
-		log.Println("We have reached unreachable code")
-	}
 	json, err := json.Marshal(sendS)
 	checkErr(err)
 	res.Header().Set("Content-Type", "application/json")

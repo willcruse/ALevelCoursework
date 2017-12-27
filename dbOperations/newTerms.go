@@ -21,7 +21,7 @@ func NewTerm(term1, term2 string, setID int64) int { //Function to make new term
 	checkError(err)
 	res2, err := stmtT.Exec(setIDInt, term1, term2) //inserts the values into the db
 	if err != nil {
-		log.Println(err)
+		log.Println("New Term error: ", err)
 		return 0
 	}
 	fmt.Println(res2)
