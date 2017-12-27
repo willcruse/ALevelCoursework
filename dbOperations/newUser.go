@@ -40,6 +40,7 @@ func checkTaken(email, uName string) (bool, bool) {
 	checkError(errCon)
 	checkError(err)
 	rows, err := db.Query("SELECT * FROM users WHERE uName=? OR email=?", uName, email)
+	defer rows.Close()
 	if err != sql.ErrNoRows {
 		return false, false
 	}
