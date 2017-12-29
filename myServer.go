@@ -32,6 +32,7 @@ func main() {
 	mux.HandleFunc("/setsPage/newSetPage", newSetsPage)
 	mux.HandleFunc("/teachertools/timer", timer)
 	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
+	mux.HandleFunc("/setsPage/getTerms", getTermsFunc)
 	mux.Handle("/teacherScripts/", http.StripPrefix("/teacherScripts", http.FileServer(http.Dir("teacherScripts"))))
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
@@ -71,8 +72,6 @@ func setsPage(res http.ResponseWriter, req *http.Request) { //The function that 
 	sendS := send{sets}                //Makes a send struct containing the returned struct
 	dataJS, err := json.Marshal(sendS) //Turns into json
 	checkErr(err)
-	fmt.Println("JSON: ", string(dataJS))
-	fmt.Println("Actual Data: ", sets)
 	res.Header().Set("Content-Type", "application/json") //Sets headers --> Writes data
 	res.Write(dataJS)
 	return
@@ -222,6 +221,26 @@ func newSets(res http.ResponseWriter, req *http.Request) {
 	sendS := &send{suc}
 	json, err := json.Marshal(sendS)
 	checkErr(err)
+	res.Header().Set("Content-Type", "application/json")
+	res.Write(json)
+	return
+}
+
+func getTermsFunc(res http.ResponseWriter, req *http.Request) {
+	type rec struct {
+		SetID int
+	}
+	var recS rec
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	terms, err := dbOperations.GetTerms(recS.SetID)
+	checkErr(err)
+	type send struct {
+		Terms [][]string `json:"terms"`
+	}
+	sendS := send{terms}
+	json, err := json.Marshal(sendS)
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(json)
 	return

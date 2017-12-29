@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script type="text/javascript">
         window.onload = getSets();
+
         function getSets() {
             var uID = -1;
             var x = decodeURIComponent(document.cookie);
@@ -26,18 +27,48 @@
             xhr.open('POST', '/setsPage', true);
             xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
             xhr.onload = function() {
+                var newHTML = "<tr><th>SetName</th><th>Edit</th></tr>";
+                var table = document.getElementById("mySetsTable");
                 var jsonResp = JSON.parse(xhr.responseText);
                 var jsonSets = jsonResp.sets;
                 if (jsonSets == null) {
-                    console.log("No Sets");
                     return
                 }
-                console.log(jsonResp);
+                console.log("JSON SETS: ", jsonSets);
+                for (var i = 0; i < jsonSets.length; i++) {
+                    var tempArr = jsonSets[i]
+                    console.log(tempArr);
+                    var tempHTML = "</br><tr><td>";
+                    tempHTML += tempArr[1];
+                    tempHTML += "</th><td>";
+                    tempHTML += "<button onclick='view(";
+                    tempHTML += tempArr[0];
+                    tempHTML += ");'>view</button></td>";
+                    newHTML += tempHTML;
+                }
+                table.innerHTML = newHTML;
             }
             xhr.send(json);
         }
 
-        function newSet(){
+        function view(id) {
+            var obj = new Object();
+            obj.SetID = id;
+            var json = JSON.stringify(obj);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/setsPage/getTerms', true);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            xhr.onload = function() {
+                var jsonRes = JSON.parse(xhr.responseText);
+                var JSONterms = jsonRes.terms;
+                for (var i = 0; i < JSONterms.length; i++) {
+                    console.log("Term Pair ", i, " :", JSONterms[i]);
+                }
+            }
+            xhr.send(json)
+        }
+
+        function newSet() {
             var iframe = document.getElementById("newSetIframe");
             iframe.src = "/setsPage/newSetPage"
         }
