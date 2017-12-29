@@ -61,8 +61,20 @@
             xhr.onload = function() {
                 var jsonRes = JSON.parse(xhr.responseText);
                 var JSONterms = jsonRes.terms;
+                var newHTML = "<tr><th>First Term</th><th>Second Term</th></tr>"
                 for (var i = 0; i < JSONterms.length; i++) {
                     console.log("Term Pair ", i, " :", JSONterms[i]);
+                    var tempArr = JSONterms[i];
+                    var tempHTML = "</br><tr><td>";
+                    tempHTML += tempArr[0];
+                    tempHTML += "</th><td>";
+                    tempHTML += tempArr[1];
+                    newHTML += tempHTML;
+                }
+                if (document.getElementById("termsTable").innerHTML == newHTML) {
+                    document.getElementById("termsTable").innerHTML = "";
+                } else {
+                    document.getElementById("termsTable").innerHTML = newHTML;
                 }
             }
             xhr.send(json)
@@ -96,6 +108,10 @@
         <div id="setsTable">
             <h2>My Sets</h2>
             <table id="mySetsTable"></table>
+        </div>
+        <div id="termsDiv">
+            <h2>Terms</h2>
+            <table id="termsTable"></table>
         </div>
     </div>
 </body>
