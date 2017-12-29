@@ -15,11 +15,9 @@ func NewSet(setName string, uID int) int64 { //function to create a new set
 	errCon := db.Ping()
 	checkError(errCon)                                                                              //Checks for errors in the dbconnection
 	rows, errN := db.Query("SELECT setID FROM cards WHERE (setName=? AND userOwn=?)", setName, uID) //Query for sets which share the setName and user
-	log.Println("ErrN: ", errN)
 	defer rows.Close()
-	checkError(err)
+	checkError(errN)
 	for rows.Next() {
-		log.Println("We did rows exists")
 		return -5 //err code if set already exists
 	}
 	stmtC, err := db.Prepare("INSERT INTO cards (userOwn, setName) VALUES(?, ?)") //Prepares statement that creates new set
@@ -30,6 +28,5 @@ func NewSet(setName string, uID int) int64 { //function to create a new set
 	log.Println("Result ", res)
 	lastID, err := res.LastInsertId()
 	checkError(err)
-	log.Println("We did insert")
 	return lastID //Returns id of the set
 }

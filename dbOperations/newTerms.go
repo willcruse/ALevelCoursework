@@ -20,13 +20,12 @@ func NewTerm(term1, term2 string, setID int64) int { //Function to make new term
 	checkError(err)
 	res2, err := stmtT.Exec(setIDInt, term1, term2) //inserts the values into the db
 	if err != nil {
-		log.Println("New Term error: ", err)
-		return 0
+		return 1
 	}
 	rows, err := res2.RowsAffected()
 	checkError(err)
 	log.Println("Success, rows Affected : ", rows)
-	return 1
+	return 0
 }
 
 func TermsExisting(term1, term2, setName string, uID int) { //Func to make new terms in db from setName and uID

@@ -3,7 +3,6 @@ package dbOperations
 import (
 	"database/sql"
 	"errors"
-	"log"
 	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -29,7 +28,6 @@ func GetSets(uID int) ([][]string, error) { //Gets a list of setnames and their 
 		checkError(err)
 		tempStr := strconv.Itoa(setID)
 		tempArr := []string{tempStr, setName}
-		log.Println("Temp Arr: ", tempArr)
 		data = append(data, tempArr)
 	}
 	return data, nil
