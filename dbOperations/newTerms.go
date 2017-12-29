@@ -2,7 +2,6 @@ package dbOperations
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	_ "github.com/go-sql-driver/mysql" //JUSTIFIED
@@ -24,7 +23,9 @@ func NewTerm(term1, term2 string, setID int64) int { //Function to make new term
 		log.Println("New Term error: ", err)
 		return 0
 	}
-	fmt.Println(res2)
+	rows, err := res2.RowsAffected()
+	checkError(err)
+	log.Println("Success, rows Affected : ", rows)
 	return 1
 }
 

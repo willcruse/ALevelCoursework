@@ -71,8 +71,8 @@ func setsPage(res http.ResponseWriter, req *http.Request) { //The function that 
 	sendS := send{sets}                //Makes a send struct containing the returned struct
 	dataJS, err := json.Marshal(sendS) //Turns into json
 	checkErr(err)
-	fmt.Println(string(dataJS))
-	fmt.Println(sets)
+	fmt.Println("JSON: ", string(dataJS))
+	fmt.Println("Actual Data: ", sets)
 	res.Header().Set("Content-Type", "application/json") //Sets headers --> Writes data
 	res.Write(dataJS)
 	return
@@ -206,12 +206,11 @@ func newSets(res http.ResponseWriter, req *http.Request) {
 	checkErr(err)
 	recS.uIDTrans, err = strconv.Atoi(recS.UID)
 	checkErr(err)
+	log.Println("Recieved: ", recS)
 	setID := dbOperations.NewSet(recS.SetName, recS.uIDTrans)
+	log.Println("New setID: ", setID)
 	var suc int
-	if setID == -10 {
-		log.Println("We have reached unreachable code")
-		suc = 1
-	} else if setID == -5 {
+	if setID == -5 {
 		log.Println("Set already exists")
 		suc = 1
 	} else {
