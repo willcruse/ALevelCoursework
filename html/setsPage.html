@@ -63,7 +63,6 @@
                 var JSONterms = jsonRes.terms;
                 var newHTML = "<tr><th>First Term</th><th>Second Term</th></tr>"
                 for (var i = 0; i < JSONterms.length; i++) {
-                    console.log("Term Pair ", i, " :", JSONterms[i]);
                     var tempArr = JSONterms[i];
                     var tempHTML = "</br><tr><td>";
                     tempHTML += tempArr[0];
@@ -71,11 +70,7 @@
                     tempHTML += tempArr[1];
                     newHTML += tempHTML;
                 }
-                if (document.getElementById("termsTable").innerHTML == newHTML) {
-                    document.getElementById("termsTable").innerHTML = "";
-                } else {
-                    document.getElementById("termsTable").innerHTML = newHTML;
-                }
+                document.getElementById("termsTable").innerHTML = "";
             }
             xhr.send(json)
         }
