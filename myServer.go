@@ -33,6 +33,7 @@ func main() {
 	mux.HandleFunc("/teachertools/timer", timer)
 	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
 	mux.HandleFunc("/setsPage/getTerms", getTermsFunc)
+	mux.HandleFunc("/setsPage/deleteTerms", delTerms)
 	mux.Handle("/teacherScripts/", http.StripPrefix("/teacherScripts", http.FileServer(http.Dir("teacherScripts"))))
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
@@ -243,6 +244,19 @@ func getTermsFunc(res http.ResponseWriter, req *http.Request) {
 	json, err := json.Marshal(sendS)
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(json)
+	return
+}
+
+func delTerms(res http.ResponseWriter, req *http.Request) {
+	type rec struct {
+		SetID int
+		terms []string
+	}
+	var recS rec
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	dbOperations.DeleteTerms(recS.SetID, recS.terms)
 	return
 }
 

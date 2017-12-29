@@ -27,20 +27,18 @@
             xhr.open('POST', '/setsPage', true);
             xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
             xhr.onload = function() {
-                var newHTML = "<tr><th>SetName</th><th>Edit</th></tr>";
+                var newHTML = "<tr><th>SetName</th><th>View</th></tr>";
                 var table = document.getElementById("mySetsTable");
                 var jsonResp = JSON.parse(xhr.responseText);
                 var jsonSets = jsonResp.sets;
                 if (jsonSets == null) {
                     return
                 }
-                console.log("JSON SETS: ", jsonSets);
                 for (var i = 0; i < jsonSets.length; i++) {
                     var tempArr = jsonSets[i]
-                    console.log(tempArr);
                     var tempHTML = "</br><tr><td>";
                     tempHTML += tempArr[1];
-                    tempHTML += "</th><td>";
+                    tempHTML += "</td><td>";
                     tempHTML += "<button onclick='view(";
                     tempHTML += tempArr[0];
                     tempHTML += ");'>view</button></td>";
@@ -61,16 +59,23 @@
             xhr.onload = function() {
                 var jsonRes = JSON.parse(xhr.responseText);
                 var JSONterms = jsonRes.terms;
-                var newHTML = "<tr><th>First Term</th><th>Second Term</th></tr>"
+                var newHTML = "<tr><th>First Term</th><th>Second Term</th><th>Delete Term</th></tr>"
                 for (var i = 0; i < JSONterms.length; i++) {
                     var tempArr = JSONterms[i];
                     var tempHTML = "</br><tr><td>";
                     tempHTML += tempArr[0];
-                    tempHTML += "</th><td>";
+                    tempHTML += "</td><td>";
                     tempHTML += tempArr[1];
+                    tempHTML += "</td><td><button onclick='deleteTerms('"
+                    tempHTML += tempArr[0];
+                    tempHTML += "', '";
+                    tempHTML += tempArr[1];
+                    tempHTML += "', ";
+                    tempHTML += id;
+                    tempHTML += ")'>Delete</button></td>";
                     newHTML += tempHTML;
                 }
-                document.getElementById("termsTable").innerHTML = "";
+                document.getElementById("termsTable").innerHTML = newHTML;
             }
             xhr.send(json)
         }
@@ -78,6 +83,21 @@
         function newSet() {
             var iframe = document.getElementById("newSetIframe");
             iframe.src = "/setsPage/newSetPage"
+        }
+
+        function deleteTerms(fir, sec, id) {
+            var obj = new Object();
+            var tempArr = [fir, sec];
+            obj.setID = id;
+            obj.term = tempArr;
+            var json = JSON.stringify(obj);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/setsPage/deleteTerms', true);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            xhr.onload = function() {
+                view(id);
+            }
+            xhr.send(json);
         }
     </script>
 
