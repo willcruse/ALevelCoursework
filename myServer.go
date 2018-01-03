@@ -26,6 +26,7 @@ func main() {
 	mux.HandleFunc("/loginPage", loginPage)
 	mux.HandleFunc("/signUpPage", signUpPage)
 	mux.HandleFunc("/teacherTools", teacherTools)
+	mux.HandleFunc("/signUpPage/signUp", signUp)
 	mux.HandleFunc("/loginPage/login", login)
 	mux.HandleFunc("/setsPage/getSets", getSets)
 	mux.HandleFunc("/setsPage/newSets", newSets)
@@ -111,27 +112,9 @@ func loginPage(res http.ResponseWriter, req *http.Request) {
 	http.ServeFile(res, req, "html/loginPage.html")
 }
 
-func signUpPage(res http.ResponseWriter, req *http.Request) { //Gets users info and enters into db
-	if req.Method != "POST" {
-		http.ServeFile(res, req, "html/signUpPage.html")
-		return
-	}
-	uName := req.FormValue("userName")
-	pw := req.FormValue("pw")
-	email := req.FormValue("email")
-	succ := dbOperations.NewUser(email, uName, pw)
-	var result string
-	switch succ {
-	case 0:
-		result = "Username Taken"
-	case 1:
-		result = "Email already used"
-	case 2:
-		result = "User Added"
-		fmt.Println("ADDED USER")
-		http.ServeFile(res, req, "html/loginPage.html")
-	}
-	fmt.Println(result)
+func signUpPage(res http.ResponseWriter, req *http.Request) { //Delivers sign Page
+	http.ServeFile(res, req, "html/signUpPage.html")
+	return
 }
 
 func login(res http.ResponseWriter, req *http.Request) {
@@ -190,6 +173,27 @@ func getSets(res http.ResponseWriter, req *http.Request) {
 	checkErr(err)
 	fmt.Println(data)
 
+}
+
+func signUp(res http.ResponseWriter, req *http.Request) {
+	type rec struct {
+		UName string
+		PW    string
+	}
+	var recS rec
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	resp := dbOperations.NewUser(recS.UName, recS.PW)
+	type resS struct {
+		Succ int `json:"success"`
+	}
+	resSS := resS{resp}
+	jsonR, err := json.Marshal(resSS)
+	checkErr(err)
+	res.Header().Set("Content-Type", "application/json")
+	res.Write(jsonR)
+	return
 }
 
 func newSets(res http.ResponseWriter, req *http.Request) {

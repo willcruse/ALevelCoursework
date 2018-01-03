@@ -1,33 +1,62 @@
 <html>
 
 <head>
-    <title>Sign Up</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <title>Sign Up</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <script type="text/javascript">
+    var xhr = new XMLHttpRequest();
+    var uName = document.getElementById("userName");
+    var pw = document.getElementById("pw");
+    var obj = new object();
+    obj.uName = uName;
+    obj.PW = pw;
+    var jsonS = JSON.stringify(obj);
+    xhr.open('POST', '/signUpPage/signUp', true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    xhr.onload = function() {
+      var jsonResp = JSON.parse(xhr.responseText);
+      var suc = jsonResp.success;
+      var infoP = document.getElementById("infoP")
+      switch (suc) {
+        case 0:
+          infoP.innerHTML = "Username already taken";
+          break;
+        case 1:
+          infoP.innerHTML = "Success " < a class="link" href='/loginPage' >Login</a>;
+          break;
+        default:
+          infoP.innerHTML = "Unknown Error";
+          break;
+      }
+      xhr.send(jsonS);
+    }
+  </script>
 </head>
 
 <body>
-    <div id="nav">
-        <a class="link" id="home" href="/">Home</a>
-        </br>
-        <a class="link" id="sets" href='/setsPage'>Sets</a>
-        </br>
-        <a class="link" id="terms" href='/termsPage'>Terms</a>
-        </br>
-        <a class="link" id="login" href='/loginPage'>Login</a>
-        </br>
-        <a class="link" id="signup" href='/signUpPage'>SignUp</a>
-        </br>
-        <a class="link" id="teacherTools" href='/teacherTools'>Teacher Tools</a>
-    </div>
-    <div id="page">
-        <h2>Sign Up</h2>
-        <form method="POST" action="/signUpPage ">
-            <input type="text " name="userName " placeholder="userName ">
-            <input type="password " name="pw " placeholder="pw ">
-            <input type="text " name="email " placeholder="email ">
-            <input type="submit" value="Submit">
-        </form>
-    </div>
+  <div id="nav">
+    <a class="link" id="home" href="/">Home</a>
+    </br>
+    <a class="link" id="sets" href='/setsPage'>Sets</a>
+    </br>
+    <a class="link" id="terms" href='/termsPage'>Terms</a>
+    </br>
+    <a class="link" id="login" href='/loginPage'>Login</a>
+    </br>
+    <a class="link" id="signup" href='/signUpPage'>SignUp</a>
+    </br>
+    <a class="link" id="teacherTools" href='/teacherTools'>Teacher Tools</a>
+  </div>
+  <div id="page">
+    <h2>Sign Up</h2>
+    <form method="POST" action="/signUpPage ">
+      <input type="text " id="userName" name="userName " placeholder="userName ">
+      <input type="password " id="pw" name="pw " placeholder="pw ">
+      <input type="text " name="email " placeholder="email ">
+      <input type="submit" value="Submit">
+    </form>
+    <p id="infoP"></p>
+  </div>
 </body>
 
 </html>
