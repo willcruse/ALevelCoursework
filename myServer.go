@@ -31,10 +31,10 @@ func main() {
 	mux.HandleFunc("/setsPage/getSets", getSets)
 	mux.HandleFunc("/setsPage/newSets", newSets)
 	mux.HandleFunc("/setsPage/newSetPage", newSetsPage)
-	mux.HandleFunc("/teachertools/timer", timer)
-	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
 	mux.HandleFunc("/setsPage/getTerms", getTermsFunc)
 	mux.HandleFunc("/setsPage/deleteTerms", delTerms)
+	mux.HandleFunc("/teachertools/timer", timer)
+	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
 	mux.Handle("/teacherScripts/", http.StripPrefix("/teacherScripts", http.FileServer(http.Dir("teacherScripts"))))
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
@@ -172,7 +172,6 @@ func getSets(res http.ResponseWriter, req *http.Request) {
 	data, err := dbOperations.GetSets(uIDInt)
 	checkErr(err)
 	fmt.Println(data)
-
 }
 
 func signUp(res http.ResponseWriter, req *http.Request) {
@@ -180,6 +179,7 @@ func signUp(res http.ResponseWriter, req *http.Request) {
 		UName string
 		PW    string
 	}
+	log.Println("Run")
 	var recS rec
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&recS)
@@ -188,11 +188,13 @@ func signUp(res http.ResponseWriter, req *http.Request) {
 	type resS struct {
 		Succ int `json:"success"`
 	}
-	resSS := resS{resp}
+	resSS := resS{
+		Succ: resp}
 	jsonR, err := json.Marshal(resSS)
 	checkErr(err)
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(jsonR)
+	log.Println(string(jsonR))
 	return
 }
 

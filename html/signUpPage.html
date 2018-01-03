@@ -4,29 +4,33 @@
   <title>Sign Up</title>
   <link rel="stylesheet" type="text/css" href="/css/style.css">
   <script type="text/javascript">
-    var xhr = new XMLHttpRequest();
-    var uName = document.getElementById("userName");
-    var pw = document.getElementById("pw");
-    var obj = new object();
-    obj.uName = uName;
-    obj.PW = pw;
-    var jsonS = JSON.stringify(obj);
-    xhr.open('POST', '/signUpPage/signUp', true);
-    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    xhr.onload = function() {
-      var jsonResp = JSON.parse(xhr.responseText);
-      var suc = jsonResp.success;
-      var infoP = document.getElementById("infoP")
-      switch (suc) {
-        case 0:
-          infoP.innerHTML = "Username already taken";
-          break;
-        case 1:
-          infoP.innerHTML = "Success " < a class="link" href='/loginPage' >Login</a>;
-          break;
-        default:
-          infoP.innerHTML = "Unknown Error";
-          break;
+    function signUpFunc() {
+      console.log("Run");
+      var xhr = new XMLHttpRequest();
+      var uName = document.getElementById("userName").value;
+      var pw = document.getElementById("pw").value;
+      var obj = new Object();
+      obj.uName = uName;
+      obj.pw = pw;
+      var jsonS = JSON.stringify(obj);
+      xhr.open('POST', '/signUpPage/signUp', true);
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+      xhr.onload = function() {
+        console.log("Loaded");
+        var jsonResp = JSON.parse(xhr.responseText);
+        var suc = jsonResp.success;
+        console.log("SUC: ", suc);
+        var infoP = document.getElementById("infoP")
+        switch (suc) {
+          case 0:
+            infoP.innerHTML = "Username already taken";
+            break;
+          case 1:
+            infoP.innerHTML = "Success please login";
+            break;
+          default:
+            infoP.innerHTML = "Unknown Error";
+        }
       }
       xhr.send(jsonS);
     }
@@ -49,10 +53,9 @@
   </div>
   <div id="page">
     <h2>Sign Up</h2>
-    <form method="POST" action="/signUpPage ">
+    <form method="POST" action="javascript:signUpFunc();">
       <input type="text " id="userName" name="userName " placeholder="userName ">
       <input type="password " id="pw" name="pw " placeholder="pw ">
-      <input type="text " name="email " placeholder="email ">
       <input type="submit" value="Submit">
     </form>
     <p id="infoP"></p>
