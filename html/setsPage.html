@@ -59,20 +59,24 @@
             xhr.onload = function() {
                 var jsonRes = JSON.parse(xhr.responseText);
                 var JSONterms = jsonRes.terms;
-                var newHTML = "<tr><th>First Term</th><th>Second Term</th><th>Delete Term</th></tr>"
+                if (JSONterms == null) {
+                    document.getElementById("termsTable").innerHTML = "<tr><th>First Term</th><th>Second Term</th><th>Delete Term</th></tr>";
+                    return;
+                }
+                var newHTML = "<tr><th>First Term</th><th>Second Term</th><th>Delete Term</th></tr>";
                 for (var i = 0; i < JSONterms.length; i++) {
                     var tempArr = JSONterms[i];
-                    var tempHTML = "</br><tr><td>";
+                    var tempHTML = "</br><tr><td>"; //Not most efficient but clear to see what is happening therefore easier to program
                     tempHTML += tempArr[0];
                     tempHTML += "</td><td>";
                     tempHTML += tempArr[1];
-                    tempHTML += "</td><td><button onclick='deleteTerms('"
+                    tempHTML += "</td><td><button onclick='deleteTerms(`"
                     tempHTML += tempArr[0];
-                    tempHTML += "', '";
+                    tempHTML += "`, `";
                     tempHTML += tempArr[1];
-                    tempHTML += "', ";
+                    tempHTML += "`, ";
                     tempHTML += id;
-                    tempHTML += ")'>Delete</button></td>";
+                    tempHTML += ");'>Delete</button></td>";
                     newHTML += tempHTML;
                 }
                 document.getElementById("termsTable").innerHTML = newHTML;
@@ -86,10 +90,13 @@
         }
 
         function deleteTerms(fir, sec, id) {
+            console.log("Run");
             var obj = new Object();
             var tempArr = [fir, sec];
+            console.log(tempArr);
             obj.setID = id;
             obj.term = tempArr;
+            console.log("Object ", obj);
             var json = JSON.stringify(obj);
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/setsPage/deleteTerms', true);

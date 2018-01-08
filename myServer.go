@@ -256,13 +256,15 @@ func getTermsFunc(res http.ResponseWriter, req *http.Request) {
 func delTerms(res http.ResponseWriter, req *http.Request) {
 	type rec struct {
 		SetID int
-		terms []string
+		Term  []string
 	}
 	var recS rec
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&recS)
 	checkErr(err)
-	dbOperations.DeleteTerms(recS.SetID, recS.terms)
+	log.Println("Terms (delTerms Func) ", recS.Term)
+	log.Println("ID (delTerms Func) ", recS.SetID)
+	dbOperations.DeleteTerms(recS.SetID, recS.Term)
 	return
 }
 
