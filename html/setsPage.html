@@ -60,7 +60,11 @@
                 var jsonRes = JSON.parse(xhr.responseText);
                 var JSONterms = jsonRes.terms;
                 if (JSONterms == null) {
-                    document.getElementById("termsTable").innerHTML = "<tr><th>First Term</th><th>Second Term</th><th>Delete Term</th></tr>";
+                    var newHTML = "<tr><th>First Term</th><th>Second Term</th><th>Delete Term</th></tr>";
+                    newHTML = newHTML += "</br><tr><td><input type='text' placeholder='TermA' id='newTermA'></input></td><td><input type='text' placeholder='TermB' id='newTermB'></input></td><td><button onclick='newTerms(";
+                    newHTML += id;
+                    newHTML += ");'>Add</button></td></tr>";
+                    document.getElementById("termsTable").innerHTML = newHTML;
                     return;
                 }
                 var newHTML = "<tr><th>First Term</th><th>Second Term</th><th>Delete Term</th></tr>";
@@ -76,9 +80,12 @@
                     tempHTML += tempArr[1];
                     tempHTML += "`, ";
                     tempHTML += id;
-                    tempHTML += ");'>Delete</button></td>";
+                    tempHTML += ");'>Delete</button></td></tr>";
                     newHTML += tempHTML;
                 }
+                newHTML += "</br><tr><td><input type='text' id='newTermA'>TermA</input></td><td>input type='text' id='newTermB'>TermB</input></td><td><button onclick='newTerms(";
+                newHTML += id;
+                newHTML += ");'</td></tr>"
                 document.getElementById("termsTable").innerHTML = newHTML;
             }
             xhr.send(json)
@@ -100,6 +107,38 @@
             var json = JSON.stringify(obj);
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/setsPage/deleteTerms', true);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            xhr.onload = function() {
+                view(id);
+            }
+            xhr.send(json);
+        }
+
+        function newTerms(id){
+            var termA = document.getElementById("newTermA").value;
+            var termB = document.getElementById("newTermB").value;
+            var obj = new Object();
+            obj.termA = termA;
+            obj.termB = termB;
+            obj.setID = id;
+            var uID = -1;
+            var x = decodeURIComponent(document.cookie);
+            var split = x.split(";")
+            var target = "uID=";
+            for (var i = 0; i < split.length; i++) {
+                var c = split[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+            }
+            if (c.indexOf(target) == 0) {
+                uID = c.substring(target.length, c.length);
+            }
+            obj.uID = uID;
+            var json = JSON.stringify(obj);
+            console.log("JSON", json);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/setsPage/addTerms', true);
             xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
             xhr.onload = function() {
                 view(id);

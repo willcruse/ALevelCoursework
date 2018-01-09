@@ -33,6 +33,7 @@ func main() {
 	mux.HandleFunc("/setsPage/newSetPage", newSetsPage)
 	mux.HandleFunc("/setsPage/getTerms", getTermsFunc)
 	mux.HandleFunc("/setsPage/deleteTerms", delTerms)
+	mux.HandleFunc("/setsPage/addTerms", addTerms)
 	mux.HandleFunc("/teachertools/timer", timer)
 	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
 	mux.Handle("/teacherScripts/", http.StripPrefix("/teacherScripts", http.FileServer(http.Dir("teacherScripts"))))
@@ -220,7 +221,10 @@ func newSets(res http.ResponseWriter, req *http.Request) {
 		log.Println("Set already exists")
 		suc = 1
 	} else {
-		suc = dbOperations.NewTerm(recS.TermA, recS.TermB, setID)
+		err = dbOperations.NewTerm(recS.TermA, recS.TermB, setID, recS.uIDTrans)
+		if err != nil {
+			suc = 1
+		}
 	}
 	type send struct {
 		Succ int `json:"success"`
@@ -265,6 +269,25 @@ func delTerms(res http.ResponseWriter, req *http.Request) {
 	log.Println("Terms (delTerms Func) ", recS.Term)
 	log.Println("ID (delTerms Func) ", recS.SetID)
 	dbOperations.DeleteTerms(recS.SetID, recS.Term)
+	res.Write([]byte(":)")) //So the page knows to update teh sets table
+	return
+}
+
+func addTerms(res http.ResponseWriter, req *http.Request) {
+	type rec struct {
+		SetID int
+		TermA string
+		TermB string
+		UID   int
+	}
+	var recS rec
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	setID64 := int64(recS.SetID)
+	err = dbOperations.NewTerm(recS.TermA, recS.TermB, setID64, recS.UID)
+	checkErr(err)
+	res.Write([]byte(":)")) //So the page knows to update teh sets table (Happy face to be wholesome)
 	return
 }
 
