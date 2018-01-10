@@ -30,6 +30,7 @@ func main() {
 	mux.HandleFunc("/loginPage/login", login)
 	mux.HandleFunc("/setsPage/getSets", getSets)
 	mux.HandleFunc("/setsPage/newSets", newSets)
+	mux.HandleFunc("/setsPage/deleteSets", deleteSets)
 	mux.HandleFunc("/setsPage/newSetPage", newSetsPage)
 	mux.HandleFunc("/setsPage/getTerms", getTermsFunc)
 	mux.HandleFunc("/setsPage/deleteTerms", delTerms)
@@ -230,6 +231,21 @@ func newSets(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(json)
 	return
+}
+
+func deleteSets(res http.ResponseWriter, req *http.Request) {
+	type rec struct {
+		SetID    int
+		UID      string
+		UIDTrans int
+	}
+	var recS rec
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	recS.UIDTrans, err = strconv.Atoi(recS.UID)
+	dbOperations.DeleteSets(recS.SetID, recS.UIDTrans)
+	res.Write([]byte(":)"))
 }
 
 func getTermsFunc(res http.ResponseWriter, req *http.Request) {
