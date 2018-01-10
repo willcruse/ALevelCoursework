@@ -202,8 +202,6 @@ func signUp(res http.ResponseWriter, req *http.Request) {
 func newSets(res http.ResponseWriter, req *http.Request) {
 	type rec struct {
 		SetName  string
-		TermA    string
-		TermB    string
 		UID      string
 		uIDTrans int
 	}
@@ -221,10 +219,7 @@ func newSets(res http.ResponseWriter, req *http.Request) {
 		log.Println("Set already exists")
 		suc = 1
 	} else {
-		err = dbOperations.NewTerm(recS.TermA, recS.TermB, setID, recS.uIDTrans)
-		if err != nil {
-			suc = 1
-		}
+		suc = 0
 	}
 	type send struct {
 		Succ int `json:"success"`

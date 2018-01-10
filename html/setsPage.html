@@ -32,7 +32,8 @@
                 var jsonResp = JSON.parse(xhr.responseText);
                 var jsonSets = jsonResp.sets;
                 if (jsonSets == null) {
-                    return
+                    newHTML += "<tr><td><input id='setName' placeholder='setName'></input></td><td><button onclick='newSets();'>Add</button></td></tr>";
+                    return;
                 }
                 for (var i = 0; i < jsonSets.length; i++) {
                     var tempArr = jsonSets[i]
@@ -44,6 +45,7 @@
                     tempHTML += ");'>view</button></td>";
                     newHTML += tempHTML;
                 } 
+                newHTML += "<tr><td><input id='setName' placeholder='setName'></input></td><td><button onclick='newSets();'>Add</button></td></tr>";
                 table.innerHTML = newHTML;
             }
             xhr.send(json);
@@ -91,13 +93,7 @@
             xhr.send(json)
         }
 
-        function newSet() {
-            var iframe = document.getElementById("newSetIframe");
-            iframe.src = "/setsPage/newSetPage"
-        }
-
         function deleteTerms(fir, sec, id) {
-            console.log("Run");
             var obj = new Object();
             var tempArr = [fir, sec];
             console.log(tempArr);
@@ -145,6 +141,40 @@
             }
             xhr.send(json);
         }
+
+        function newSets() {
+            var uID = -1;
+            var x = decodeURIComponent(document.cookie);
+            var split = x.split(";")
+            var target = "uID=";
+            for (var i = 0; i < split.length; i++) {
+                var c = split[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+            }
+            if (c.indexOf(target) == 0) {
+                uID = c.substring(target.length, c.length);
+            }
+            if (uID == -1) {
+                return;
+            }
+            var setName = document.getElementById("setName").value;
+            var obj = new Object();
+            obj.SetName = setName;
+            obj.UID = uID;
+            var jsonObj = JSON.stringify(obj)
+            console.log("JSON ", jsonObj);
+            var xhr = new XMLHttpRequest()
+            xhr.open('POST', '/setsPage/newSets', true);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            xhr.onload = function () {
+                var jsonResp = JSON.parse(xhr.responseText);
+                console.log("JSON", jsonResp);
+                getSets();
+            }
+            xhr.send(jsonObj)
+        }
     </script>
 
 </head>
@@ -164,8 +194,6 @@
         <a class="link" id="teacherTools" href='/teacherTools'>Teacher Tools</a>
     </div>
     <div id="page">
-        <button id="newSetsButton" onclick="newSet();">New Set</button>
-        <iframe id="newSetIframe"></iframe>
         <div id="setsTable">
             <h2>My Sets</h2>
             <table id="mySetsTable"></table>
