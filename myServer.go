@@ -275,17 +275,20 @@ func delTerms(res http.ResponseWriter, req *http.Request) {
 
 func addTerms(res http.ResponseWriter, req *http.Request) {
 	type rec struct {
-		SetID int
-		TermA string
-		TermB string
-		UID   int
+		SetID    int
+		TermA    string
+		TermB    string
+		UID      string
+		uIDTrans int
 	}
 	var recS rec
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&recS)
 	checkErr(err)
 	setID64 := int64(recS.SetID)
-	err = dbOperations.NewTerm(recS.TermA, recS.TermB, setID64, recS.UID)
+	recS.uIDTrans, err = strconv.Atoi(recS.UID)
+	checkErr(err)
+	err = dbOperations.NewTerm(recS.TermA, recS.TermB, setID64, recS.uIDTrans)
 	checkErr(err)
 	res.Write([]byte(":)")) //So the page knows to update teh sets table (Happy face to be wholesome)
 	return

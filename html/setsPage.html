@@ -43,7 +43,7 @@
                     tempHTML += tempArr[0];
                     tempHTML += ");'>view</button></td>";
                     newHTML += tempHTML;
-                }
+                } 
                 table.innerHTML = newHTML;
             }
             xhr.send(json);
@@ -61,7 +61,7 @@
                 var JSONterms = jsonRes.terms;
                 if (JSONterms == null) {
                     var newHTML = "<tr><th>First Term</th><th>Second Term</th><th>Delete Term</th></tr>";
-                    newHTML = newHTML += "</br><tr><td><input type='text' placeholder='TermA' id='newTermA'></input></td><td><input type='text' placeholder='TermB' id='newTermB'></input></td><td><button onclick='newTerms(";
+                    newHTML += "</br><tr><td><input type='text' placeholder='TermA' id='newTermA'></input></td><td><input type='text' placeholder='TermB' id='newTermB'></input></td><td><button onclick='newTerms(";
                     newHTML += id;
                     newHTML += ");'>Add</button></td></tr>";
                     document.getElementById("termsTable").innerHTML = newHTML;
@@ -83,9 +83,9 @@
                     tempHTML += ");'>Delete</button></td></tr>";
                     newHTML += tempHTML;
                 }
-                newHTML += "</br><tr><td><input type='text' id='newTermA'>TermA</input></td><td>input type='text' id='newTermB'>TermB</input></td><td><button onclick='newTerms(";
-                newHTML += id;
-                newHTML += ");'</td></tr>"
+                newHTML += "</br><tr><td><input type='text' placeholder='TermA' id='newTermA'></input></td><td><input type='text' placeholder='TermB' id='newTermB'></input></td><td><button onclick='newTerms(";
+                    newHTML += id;
+                    newHTML += ");'>Add</button></td></tr>";
                 document.getElementById("termsTable").innerHTML = newHTML;
             }
             xhr.send(json)
