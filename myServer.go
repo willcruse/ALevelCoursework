@@ -14,12 +14,13 @@ import (
 //Main Function
 func main() {
 	mux := http.NewServeMux()
-	server := http.Server{
+	server := http.Server{ //Create Custom HTTP server on port 8080 with a Read/Write timeout of 15s
 		Addr:         ":8080",
 		Handler:      mux,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
+	//Add path recognition match URLs and assign them to relevant functions
 	mux.HandleFunc("/", homePage)
 	mux.HandleFunc("/setsPage", setsPage)
 	mux.HandleFunc("/termsPage", termsPage)
@@ -28,7 +29,6 @@ func main() {
 	mux.HandleFunc("/teacherTools", teacherTools)
 	mux.HandleFunc("/signUpPage/signUp", signUp)
 	mux.HandleFunc("/loginPage/login", login)
-	mux.HandleFunc("/setsPage/getSets", getSets)
 	mux.HandleFunc("/setsPage/newSets", newSets)
 	mux.HandleFunc("/setsPage/deleteSets", deleteSets)
 	mux.HandleFunc("/setsPage/newSetPage", newSetsPage)
@@ -37,11 +37,11 @@ func main() {
 	mux.HandleFunc("/setsPage/addTerms", addTerms)
 	mux.HandleFunc("/teachertools/timer", timer)
 	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
+	//Add path recogntion to match URLs for static resources such as style sheets and js
 	mux.Handle("/teacherScripts/", http.StripPrefix("/teacherScripts", http.FileServer(http.Dir("teacherScripts"))))
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
-	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
-	err := server.ListenAndServe()
-	checkErr(err)
+	err := server.ListenAndServe() //Set the server to start listening
+	checkErr(err)                  //Check that the server started up correctly
 }
 
 //Page Functions
@@ -50,7 +50,7 @@ func homePage(res http.ResponseWriter, req *http.Request) {
 }
 
 func setsPage(res http.ResponseWriter, req *http.Request) { //The function that is invoked when navigating to the sets page
-	if req.Method != "POST" { //Checks to see if the req is a POST request
+	if req.Method != "POST" { //Checks to see if the req is a POST request and if is not serves the HTML
 		http.ServeFile(res, req, "html/setsPage.html")
 		return
 	}
@@ -95,50 +95,45 @@ func termsPage(res http.ResponseWriter, req *http.Request) { //makes new terms
 	checkErr(err)
 	uID, err := strconv.Atoi(recS.UID)
 	checkErr(err)
-	if uID == -1 {
+	if uID == -1 { //Checks to see if the user is logged in as default when getting the cookie on client side is to set uID to -1.
 		fmt.Println("Not logged in")
-		http.ServeFile(res, req, "html/signUpPage.html")
+		http.ServeFile(res, req, "html/signUpPage.html") //Redirects to sign up page
 	}
-	setName := req.FormValue("setName")
+	setName := req.FormValue("setName") //Gets the form values for the data
 	termA := req.FormValue("termA")
 	termB := req.FormValue("termB")
-	dbOperations.TermsExisting(termA, termB, setName, uID)
-	http.ServeFile(res, req, "html/termsPage.html")
+	dbOperations.TermsExisting(termA, termB, setName, uID) //Inserts them into db
+	http.ServeFile(res, req, "html/termsPage.html")        //Serves term page
 }
 
 func loginPage(res http.ResponseWriter, req *http.Request) {
-	if req.Method != "POST" { //Serves file to client
-		http.ServeFile(res, req, "html/loginPage.html")
-		return
-	}
-	http.ServeFile(res, req, "html/loginPage.html")
+	http.ServeFile(res, req, "html/loginPage.html") //Serves the client with the logingPage html file
 }
 
 func signUpPage(res http.ResponseWriter, req *http.Request) { //Delivers sign Page
 	http.ServeFile(res, req, "html/signUpPage.html")
-	return
 }
 
 func login(res http.ResponseWriter, req *http.Request) {
-	var loginSuccess int
-	type rec struct {
+	var loginSuccess int //Defines login success in the scope above other sub-scopes allowing it to be used later out
+	type rec struct {    //struct for recieving from the json data
 		UName string
 		Pw    string
 	}
-	type Success struct {
-		Succ int `json:"loginsuccess"`
-		UID  int `json:"UID"`
+	type Success struct { //Struct to send to the client
+		Succ int `json:"loginsuccess"` //Success code
+		UID  int `json:"UID"`          //Uid to be placed as a cookie
 	}
-	decoder := json.NewDecoder(req.Body)
+	decoder := json.NewDecoder(req.Body) //Creates a json decoder for the request body
 	var recS rec
-	err := decoder.Decode(&recS)
+	err := decoder.Decode(&recS) //Decodes the json into an instance of the rec struct
 	checkErr(err)
-	uName := recS.UName
+	uName := recS.UName //Gets uName and pw out of rec struct
 	pw := recS.Pw
 	var pwR string
 	var uID int
-	pwR, uID = dbOperations.UserDataUname(uName)
-	if pwR == "notFound" { //incorrect userName
+	pwR, uID = dbOperations.UserDataUname(uName) //Fetches UserData linked to that username and returns the pw and uID linked to that user
+	if pwR == "notFound" {                       //incorrect userName
 		loginSuccess = 0
 		fmt.Println("notFound")
 	} else if pw == pwR { //login as pw match
@@ -147,76 +142,56 @@ func login(res http.ResponseWriter, req *http.Request) {
 		loginSuccess = 2
 	}
 	var success Success
-	success = Success{
+	success = Success{ //Creates a new instance of the Success struct with the returned uID and the loginSuccess code
 		UID:  uID,
 		Succ: loginSuccess}
-	js, err := json.Marshal(success)
+	js, err := json.Marshal(success) //Turns the struct into json to be sent
 	if err != nil {
 		fmt.Println("JError", err)
 		return
 	}
 	res.Header().Set("Content-Type", "application/json")
-	res.Write(js)
+	res.Write(js) //Sends the json to the client with the correct headers
 	return
 }
 
-func getSets(res http.ResponseWriter, req *http.Request) {
-	type uidStuct struct {
-		UID string
-	}
-	var uIDs uidStuct
-	decoder := json.NewDecoder(req.Body)
-	err := decoder.Decode(&uIDs)
-	checkErr(err)
-	fmt.Println(uIDs.UID)
-	uIDInt, err := strconv.Atoi(uIDs.UID)
-	checkErr(err)
-	data, err := dbOperations.GetSets(uIDInt)
-	checkErr(err)
-	fmt.Println(data)
-}
-
 func signUp(res http.ResponseWriter, req *http.Request) {
-	type rec struct {
+	type rec struct { //Struct to recieve data into
 		UName string
 		PW    string
 	}
-	log.Println("Run")
 	var recS rec
-	decoder := json.NewDecoder(req.Body)
+	decoder := json.NewDecoder(req.Body) //Creates a new decoder then decoded the recieved data into it
 	err := decoder.Decode(&recS)
 	checkErr(err)
-	resp := dbOperations.NewUser(recS.UName, recS.PW)
-	type resS struct {
+	resp := dbOperations.NewUser(recS.UName, recS.PW) //Inserts a new user into the db with the revieved data
+	type resS struct {                                //Defines a new struct for the success code
 		Succ int `json:"success"`
 	}
-	resSS := resS{
+	resSS := resS{ //Makes a new instance of this struct with the response code
 		Succ: resp}
-	jsonR, err := json.Marshal(resSS)
+	jsonR, err := json.Marshal(resSS) //Converts to json
 	checkErr(err)
 	res.Header().Set("Content-Type", "application/json")
-	res.Write(jsonR)
-	log.Println(string(jsonR))
+	res.Write(jsonR) //Sends to client with appropriate headers
 	return
 }
 
 func newSets(res http.ResponseWriter, req *http.Request) {
-	type rec struct {
+	type rec struct { //Struct to recieve data into
 		SetName  string
 		UID      string
 		uIDTrans int
 	}
 	var recS rec
-	decoder := json.NewDecoder(req.Body)
+	decoder := json.NewDecoder(req.Body) //Creates a new decoder then decodes the data recieved into the struct
 	err := decoder.Decode(&recS)
 	checkErr(err)
-	recS.uIDTrans, err = strconv.Atoi(recS.UID)
+	recS.uIDTrans, err = strconv.Atoi(recS.UID) //Converts the uID received into an int
 	checkErr(err)
-	log.Println("Recieved: ", recS)
-	setID := dbOperations.NewSet(recS.SetName, recS.uIDTrans)
-	log.Println("New setID: ", setID)
+	setID := dbOperations.NewSet(recS.SetName, recS.uIDTrans) //Makes a new set with the appropriate set name belonging to the right user
 	var suc int
-	if setID == -5 {
+	if setID == -5 { //Generates the correct success code
 		log.Println("Set already exists")
 		suc = 1
 	} else {
@@ -225,46 +200,46 @@ func newSets(res http.ResponseWriter, req *http.Request) {
 	type send struct {
 		Succ int `json:"success"`
 	}
-	sendS := &send{suc}
+	sendS := &send{suc} //Creates an isntance of the send struct that contains the success code
 	json, err := json.Marshal(sendS)
 	checkErr(err)
 	res.Header().Set("Content-Type", "application/json")
-	res.Write(json)
+	res.Write(json) //Writes json to the client with the right headers
 	return
 }
 
 func deleteSets(res http.ResponseWriter, req *http.Request) {
-	type rec struct {
+	type rec struct { //Struct to receive data into
 		SetID    int
 		UID      string
 		UIDTrans int
 	}
 	var recS rec
 	decoder := json.NewDecoder(req.Body)
-	err := decoder.Decode(&recS)
+	err := decoder.Decode(&recS) //Decodes the recieved json into the rec stuct
 	checkErr(err)
-	recS.UIDTrans, err = strconv.Atoi(recS.UID)
-	dbOperations.DeleteSets(recS.SetID, recS.UIDTrans)
-	res.Write([]byte(":)"))
+	recS.UIDTrans, err = strconv.Atoi(recS.UID)        //converts the received uID into an int
+	dbOperations.DeleteSets(recS.SetID, recS.UIDTrans) //Deletes the set
+	res.Write([]byte(":)"))                            //Writes to the client so it knows to update
 }
 
 func getTermsFunc(res http.ResponseWriter, req *http.Request) {
-	type rec struct {
+	type rec struct { //Struct to recieve data into
 		SetID int
 	}
 	var recS rec
-	decoder := json.NewDecoder(req.Body)
+	decoder := json.NewDecoder(req.Body) //Creates a new decoder then decodes the data into it
 	err := decoder.Decode(&recS)
 	checkErr(err)
-	terms, err := dbOperations.GetTerms(recS.SetID)
+	terms, err := dbOperations.GetTerms(recS.SetID) //Fetches all the terms with the relevent setID
 	checkErr(err)
-	type send struct {
-		Terms [][]string `json:"terms"`
+	type send struct { //Struct to send the terms
+		Terms [][]string `json:"terms"` //2D array each sub array contains a pair of terms ie. [[1, 2], [3, 4]]
 	}
-	sendS := send{terms}
-	json, err := json.Marshal(sendS)
+	sendS := send{terms}             //Creates an instance of this struct with the relevent terms
+	json, err := json.Marshal(sendS) //Converts this to kson
 	res.Header().Set("Content-Type", "application/json")
-	res.Write(json)
+	res.Write(json) //Writes to client with the relevent headers
 	return
 }
 
@@ -280,12 +255,12 @@ func delTerms(res http.ResponseWriter, req *http.Request) {
 	log.Println("Terms (delTerms Func) ", recS.Term)
 	log.Println("ID (delTerms Func) ", recS.SetID)
 	dbOperations.DeleteTerms(recS.SetID, recS.Term)
-	res.Write([]byte(":)")) //So the page knows to update teh sets table
+	res.Write([]byte(":)")) //So the page knows to update the sets table
 	return
 }
 
 func addTerms(res http.ResponseWriter, req *http.Request) {
-	type rec struct {
+	type rec struct { //struct to receive data into
 		SetID    int
 		TermA    string
 		TermB    string
@@ -293,32 +268,28 @@ func addTerms(res http.ResponseWriter, req *http.Request) {
 		uIDTrans int
 	}
 	var recS rec
-	decoder := json.NewDecoder(req.Body)
+	decoder := json.NewDecoder(req.Body) //Creates a new decoder which decodes the recieved data into the rec struct
 	err := decoder.Decode(&recS)
 	checkErr(err)
-	setID64 := int64(recS.SetID)
-	recS.uIDTrans, err = strconv.Atoi(recS.UID)
+	setID64 := int64(recS.SetID)                //Converts the recieved setID to an int64
+	recS.uIDTrans, err = strconv.Atoi(recS.UID) //Converts the received uID to an int
 	checkErr(err)
-	err = dbOperations.NewTerm(recS.TermA, recS.TermB, setID64, recS.uIDTrans)
+	err = dbOperations.NewTerm(recS.TermA, recS.TermB, setID64, recS.uIDTrans) //Adds the terms to the db
 	checkErr(err)
-	res.Write([]byte(":)")) //So the page knows to update teh sets table (Happy face to be wholesome)
+	res.Write([]byte(":)")) //writes so the page knows to update the sets table
 	return
 }
 
-func newSetsPage(res http.ResponseWriter, req *http.Request) {
-	http.ServeFile(res, req, "html/newSet.html")
-}
-
 func teacherTools(res http.ResponseWriter, req *http.Request) {
-	http.ServeFile(res, req, "html/teachertools.html")
+	http.ServeFile(res, req, "html/teachertools.html") //Serves the html
 }
 
 func timer(res http.ResponseWriter, req *http.Request) {
-	http.ServeFile(res, req, "html/timer.html")
+	http.ServeFile(res, req, "html/timer.html") //Serves the html
 }
 
 func stopWatch(res http.ResponseWriter, req *http.Request) {
-	http.ServeFile(res, req, "html/stopWatch.html")
+	http.ServeFile(res, req, "html/stopWatch.html") //Serves the html
 }
 
 func checkErr(e error) {
