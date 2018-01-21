@@ -4,3 +4,7 @@
 debug
 
 \.idea/libraries/
+
+\.idea/workspace\.xml
+
+*.xml
