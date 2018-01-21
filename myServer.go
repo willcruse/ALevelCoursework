@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -36,8 +37,9 @@ func main() {
 	mux.HandleFunc("/setsPage/addTerms", addTerms)
 	mux.HandleFunc("/teachertools/timer", timer)
 	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
+	mux.HandleFunc("/games/quizMove", quizMove)
 	//Add path recognition to match URLs for static resources such as style sheets and js
-	mux.Handle("/teacherScripts/", http.StripPrefix("/teacherScripts", http.FileServer(http.Dir("teacherScripts"))))
+	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	err := server.ListenAndServe() //Set the server to start listening
 	checkErr(err)                  //Check that the server started up correctly
@@ -277,6 +279,19 @@ func addTerms(res http.ResponseWriter, req *http.Request) {
 	checkErr(err)
 	res.Write([]byte(":)")) //writes so the page knows to update the sets table
 	return
+}
+
+func quizMove(res http.ResponseWriter, req *http.Request) {
+	type rec struct {
+		ID int
+	}
+	var recS rec
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	htmlTemplate, err := template.ParseFiles("html/quiz.html")
+	checkErr(err)
+	htmlTemplate.Execute(res, recS.ID)
 }
 
 func teacherTools(res http.ResponseWriter, req *http.Request) {

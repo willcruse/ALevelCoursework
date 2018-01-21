@@ -1,7 +1,7 @@
 var timerInterval = -1;
 var finishedInterval;
-var i = -1; //timer interval check to disallow more than one instance of the timer decrease to allow 
-var s = 0; //seconds variable representing remaining seconds on the timer 
+var i = -1; //timer interval check to disallow more than one instance of the timer decrease to allow
+var s = 0; //seconds variable representing remaining seconds on the timer
 var m = 0; //minutes variable representing remaining minutes on the timer
 var h = 0; //hours variable representing remaining hours on the timer
 var iH = 0; //input hours that gets the number on the hours in the webpage
@@ -44,19 +44,19 @@ function decrement() {
 }
 
 function updateDisplay() {
-    //finds how many hours, minutes and seconds are in the TMS 
-    var n = TMS; //n represents the TMS in a local variable 
+    //finds how many hours, minutes and seconds are in the TMS
+    var n = TMS; //n represents the TMS in a local variable
     h = Math.floor(n / 3600000); //divides n by the number of ms in a hour then floors it to a whole number
     n = n - (h * 3600000); //takes the total hours in ms from the TMS to allow it not to be doubled
-    m = Math.floor(n / 60000); //does the same operation on minutes 
-    n = n - (m * 60000); //takes the minutes in ms from the TMS remaining 
+    m = Math.floor(n / 60000); //does the same operation on minutes
+    n = n - (m * 60000); //takes the minutes in ms from the TMS remaining
     s = Math.floor(n / 1000); //repeats the same on seconds but I do not take these from n as not needed
     var timerP = document.getElementById("timerP");
     timerP.textContent = (h + " : " + m + " : " + s);
 }
 
 function finished() {
-    var audio = new Audio("/teacherScripts/finishSound.mp3");
+    var audio = new Audio("/scripts/finishSound.mp3");
     audio.play();
 }
 
