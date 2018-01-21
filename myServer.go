@@ -31,13 +31,12 @@ func main() {
 	mux.HandleFunc("/loginPage/login", login)
 	mux.HandleFunc("/setsPage/newSets", newSets)
 	mux.HandleFunc("/setsPage/deleteSets", deleteSets)
-	mux.HandleFunc("/setsPage/newSetPage", newSetsPage)
 	mux.HandleFunc("/setsPage/getTerms", getTermsFunc)
 	mux.HandleFunc("/setsPage/deleteTerms", delTerms)
 	mux.HandleFunc("/setsPage/addTerms", addTerms)
 	mux.HandleFunc("/teachertools/timer", timer)
 	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
-	//Add path recogntion to match URLs for static resources such as style sheets and js
+	//Add path recognition to match URLs for static resources such as style sheets and js
 	mux.Handle("/teacherScripts/", http.StripPrefix("/teacherScripts", http.FileServer(http.Dir("teacherScripts"))))
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	err := server.ListenAndServe() //Set the server to start listening
@@ -178,7 +177,7 @@ func signUp(res http.ResponseWriter, req *http.Request) {
 }
 
 func newSets(res http.ResponseWriter, req *http.Request) {
-	type rec struct { //Struct to recieve data into
+	type rec struct { //Struct to receive data into
 		SetName  string
 		UID      string
 		uIDTrans int
