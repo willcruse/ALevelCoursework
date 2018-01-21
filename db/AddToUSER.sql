@@ -1,2 +1,2 @@
 USE educationWebsite;
-INSERT INTO users (email, uName, pw) VALUES( "fake@email.com", "uName", "sickPassword"); 
+INSERT INTO users (uName, pw) VALUES("uName", "sickPassword");
