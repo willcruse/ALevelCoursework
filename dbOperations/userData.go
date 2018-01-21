@@ -14,7 +14,7 @@ func userDataUID(uID int) []string {
 	defer db.Close()
 	errCon := db.Ping()
 	checkError(errCon)
-	rows, err := db.Query("SELECT * FROM users WHERE uID=?", uID)
+	rows, err := db.Query("SELECT email, uName, pw FROM users WHERE uID=?", uID)
 	checkError(err)
 	var data []string
 	for rows.Next() {
