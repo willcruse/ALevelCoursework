@@ -1,11 +1,11 @@
-var timerInterval = -1;
+var timerInterval = -1; //Defines needed global variables
 var i = -1;
 var ms = 00;
 var s = 0;
 var m = 0;
 var h = 0;
 
-function startSW() {
+function startSW() { //Function to start the stopwatch with a timer interval of 10ms
     if (i == -1) {
         timerInterval = setInterval(increment, 10);
         i = timerInterval;
@@ -13,27 +13,26 @@ function startSW() {
 }
 
 function stopSW() {
-    clearInterval(i);
-    i = -1;
+    clearInterval(i); //Clears the interval
+    i = -1; //Sets i to ready state
 }
 
 function resetSW() {
-    console.log("reset");
-    clearInterval(timerInterval);
+    clearInterval(timerInterval); //Clears timer interval
     ms = 0;
     s = 0;
     m = 0;
-    h = 0;
+    h = 0; //Changes all time elements to 0
     var timerPJS = document.getElementById("SWP");
-    timerPJS.textContent = (h + " : " + m + " : " + s + " . " + ms);
-    i = -1;
+    timerPJS.textContent = (h + " : " + m + " : " + s + " . " + ms); //Updates html
+    i = -1; //Sets i to ready state
 }
 
 function increment() {
     var timerPJS = document.getElementById("SWP");
     timerPJS.textContent = (h + " : " + m + " : " + s + " . " + ms);
     ms++;
-    if (ms == 99) {
+    if (ms == 99) { //Increments ms and checks to see if the next variable needs increasing
         ms = 0;
         s++;
     }

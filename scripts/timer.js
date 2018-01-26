@@ -11,35 +11,35 @@ var TMS = -1;
 
 
 function startTimer() {
-    if (i == -1) {
+    if (i == -1) { //Checks i is in ready state
         setInputs();
-        TMS = (iH * 3600000) + (iM * 60000) + (iS * 1000) - 1000;
-        i = setInterval(decrement, 1000);
-        clearNums();
-        updateDisplay();
-    } else if (i == -2) {
+        TMS = (iH * 3600000) + (iM * 60000) + (iS * 1000) - 1000; //Calculates number of ms
+        i = setInterval(decrement, 1000); //Sets interval to go every 1s
+        clearNums(); //Clears the display
+        updateDisplay(); //Updates the display
+    } else if (i == -2) {//Allows for resuming of timer once paused
         i = setInterval(decrement, 1000);
     }
 }
 
 function stopTimer() {
-    clearInterval(i);
-    i = -2;
+    clearInterval(i); //Clears interval to stop decrementation
+    i = -2; //Sets i to pause state
 }
 
 function resetTimer() {
-    clearInterval(i);
-    i = -1;
-    addNums();
+    clearInterval(i); //Clears interval
+    i = -1; //Set i to the ready state
+    addNums(); //Populates the display
 }
 
 function decrement() {
-    if (TMS != 0) {
+    if (TMS != 0) { //Decrements the TMS then updates display
         TMS = TMS - 1000;
         updateDisplay();
     } else {
-        finished();
-        clearInterval(i);
+        finished(); //Calls finished func
+        clearInterval(i); //Clears the interval
     }
 }
 
@@ -56,17 +56,17 @@ function updateDisplay() {
 }
 
 function finished() {
-    var audio = new Audio("/scripts/finishSound.mp3");
+    var audio = new Audio("/scripts/finishSound.mp3"); //Locates the finished sound then plays it
     audio.play();
 }
 
 
 function clearNums() {
     function setBlank(id) {
-        var a = document.getElementById(id);
+        var a = document.getElementById(id); //Gets the element and sets to empty string
         a.textContent = "";
     }
-    setBlank("h2Im");
+    setBlank("h2Im"); //Sets everything to blank
     setBlank("h1Im");
     setBlank("m2Im");
     setBlank("m1Im");
@@ -77,18 +77,18 @@ function clearNums() {
 }
 
 function addNums() {
-    function setZero(id) {
+    function setZero(id) { //Gets the element and sets to 0
         var a = document.getElementById(id);
         a.textContent = "0";
     }
 
-    function setColon(id) {
+    function setColon(id) { //Gets the element and sets to :
         var a = document.getElementById(id);
         a.textContent = ":";
     }
     var n = document.getElementById("timerP");
     n.textContent = "";
-    setZero("h2Im");
+    setZero("h2Im"); //For each element does the right thing
     setZero("h1Im");
     setZero("m2Im");
     setZero("m1Im");
@@ -104,13 +104,13 @@ function increase(i) {
     var k = document.getElementById(n);
     var j = k.textContent;
     j = parseInt(j, 10);
-    if (n.charAt(0) == "h" || n.charAt(1) == "1") {
-        if (j < 9) {
+    if (n.charAt(0) == "h" || n.charAt(1) == "1") { //Makes sure time cant be made to not real values
+        if (j < 9) { //Cant exceed 9
             j++;
         } else {
             j = 0;
         }
-    } else {
+    } else { //Cant exceed 5
         if (j < 5) {
             j++;
         } else {
@@ -124,7 +124,7 @@ function decrease(i) {
     var n = i.id;
     var k = document.getElementById(n);
     var j = k.textContent;
-    j = parseInt(j, 10);
+    j = parseInt(j, 10); //Makes sure time is above 0
     if (j > 0) {
         j--;
     } else {
@@ -134,7 +134,7 @@ function decrease(i) {
 }
 
 function setInputs() {
-    iH = parseInt((document.getElementById("h2Im").textContent) + (document.getElementById("h1Im").textContent), 10);
+    iH = parseInt((document.getElementById("h2Im").textContent) + (document.getElementById("h1Im").textContent), 10); //Gets the input from the display
     iM = parseInt((document.getElementById("m2Im").textContent) + (document.getElementById("m1Im").textContent), 10);
     iS = parseInt((document.getElementById("s2Im").textContent) + (document.getElementById("s1Im").textContent), 10);
 }
