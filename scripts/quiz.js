@@ -42,7 +42,7 @@ function check(id){
       var correct = jsonR.corArr;
       var ans = jsonR.ansArr;
       var score = jsonR.score;
-      document.getElementById("infoP").innerHTML = score;
+      document.getElementById("infoP").innerHTML = "Score: " + score + "/" + correct.length;
       for (var i = 1; i <= rowLen; i++){
         document.getElementById("quizTable").rows[i].cells.item(2).innerHTML = "<p>" + ans[i-1] + "</p>";
         if (correct[i-1]) {

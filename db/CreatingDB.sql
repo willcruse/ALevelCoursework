@@ -5,7 +5,7 @@ USE educationWebsite;
 CREATE TABLE users  (
     uID int AUTO_INCREMENT PRIMARY KEY, 
     uName VARCHAR(30) NOT NULL,
-    pw VARCHAR(40) NOT NULL
+    pw VARCHAR(256) NOT NULL
 );
 
 CREATE TABLE cards (

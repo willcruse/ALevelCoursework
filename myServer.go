@@ -8,10 +8,11 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-
 	"github.com/willcruse/ComputingCoursework/dbOperations"
 	"os"
 	"bufio"
+	"crypto"
+	"encoding/hex"
 )
 
 //Main Function
@@ -101,6 +102,7 @@ func login(res http.ResponseWriter, req *http.Request) {
 	type rec struct {    //struct for recieving from the json data
 		UName string
 		Pw    string
+		pwHash string
 	}
 	type Success struct { //Struct to send to the client
 		Succ int `json:"loginsuccess"` //Success code
@@ -111,14 +113,14 @@ func login(res http.ResponseWriter, req *http.Request) {
 	err := decoder.Decode(&recS) //Decodes the json into an instance of the rec struct
 	checkErr(err)
 	uName := recS.UName //Gets uName and pw out of rec struct
-	pw := recS.Pw
+	recS.pwHash = getHash(recS.Pw)
 	var pwR string
 	var uID int
 	pwR, uID = dbOperations.UserDataUname(uName) //Fetches UserData linked to that username and returns the pw and uID linked to that user
 	if pwR == "notFound" {                       //incorrect userName
 		loginSuccess = 0
 		fmt.Println("notFound")
-	} else if pw == pwR { //login as pw match
+	} else if recS.pwHash == pwR { //login as pw match
 		loginSuccess = 1
 	} else { //incorrect pw
 		loginSuccess = 2
@@ -141,12 +143,14 @@ func signUp(res http.ResponseWriter, req *http.Request) {
 	type rec struct { //Struct to recieve data into
 		UName string
 		PW    string
+		pwHash string
 	}
 	var recS rec
 	decoder := json.NewDecoder(req.Body) //Creates a new decoder then decoded the recieved data into it
 	err := decoder.Decode(&recS)
 	checkErr(err)
-	resp := dbOperations.NewUser(recS.UName, recS.PW) //Inserts a new user into the db with the revieved data
+	recS.pwHash = getHash(recS.PW)
+	resp := dbOperations.NewUser(recS.UName, recS.pwHash) //Inserts a new user into the db with the revieved data
 	type resS struct {                                //Defines a new struct for the success code
 		Succ int `json:"success"`
 	}
@@ -360,4 +364,10 @@ func checkErr(e error) {
 	if e != nil {
 		log.Println(e) //Checks for error and if there is an error it prints with a timestamp
 	}
+}
+
+func getHash(text string) string {
+	h := crypto.SHA256.New()
+	h.Write([]byte(text))
+	return hex.EncodeToString(h.Sum(nil))
 }
