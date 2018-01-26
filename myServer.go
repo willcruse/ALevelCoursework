@@ -41,6 +41,7 @@ func main() {
 	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
 	mux.HandleFunc("/games/quizMove", quizMove)
 	mux.HandleFunc("/games/getFirstTerm", getFirstTerm)
+	mux.HandleFunc("/games/checkQuizRes", checkQuizRes)
 	//Add path recognition to match URLs for static resources such as style sheets and js
 	mux.Handle("/html/cache/", http.StripPrefix("/html/cache/", http.FileServer(http.Dir("html/cache"))))
 	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
@@ -315,7 +316,7 @@ func getFirstTerm(res http.ResponseWriter, req *http.Request) {
 		ID int
 	}
 	type send struct {
-		Term []string `json:"term"`
+		Term []string `json:"terms"`
 	}
 	var recS rec
 	decoder := json.NewDecoder(req.Body)
@@ -326,8 +327,47 @@ func getFirstTerm(res http.ResponseWriter, req *http.Request) {
 	for _, value := range terms {
 		termA = append(termA, value[0])
 	}
-	log.Println("TermA ", termA)
 	sendS := send{termA}
+	json, err := json.Marshal(sendS)
+	res.Header().Set("Content-Type", "application/json")
+	res.Write(json) //Writes to client with the relevant headers
+	return
+}
+
+func checkQuizRes(res http.ResponseWriter, req *http.Request){
+	log.Println("Run")
+	type rec struct {
+		ID int
+		Ans []string
+	}
+	type send struct {
+		Ans []string 	`json:"ansArr"`
+		Cor []bool		`json:"corArr"`
+		Score int 		`json:"score"`
+	}
+	var recS rec
+	var sendS send
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	terms, err := dbOperations.GetTerms(recS.ID)
+	var termB []string
+	for _, val := range terms {
+		termB = append(termB, val[1])
+	}
+	log.Println(termB)
+	log.Println("recS", recS)
+	for index, val := range termB {
+			log.Println("index", index)
+			if index < len(recS.Ans) {
+				sendS.Cor = append(sendS.Cor, val == recS.Ans[index])
+				sendS.Ans = append(sendS.Ans, val)
+				if val == recS.Ans[index] {
+					sendS.Score++
+				}
+			}
+	}
+	log.Println(sendS)
 	json, err := json.Marshal(sendS)
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(json) //Writes to client with the relevant headers
