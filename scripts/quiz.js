@@ -8,13 +8,13 @@ function genQuiz(id) {
     console.log(xhr.responseText);
     var jsonRes = JSON.parse(xhr.responseText);
     var termFirst = jsonRes.term;
-    var newHTML = "<tr><th>First<th><Second</th><th>Check</th><th>Answer</th><th>Correct?</th>";
+    var newHTML = "<tr><th>First</th><th>Second</th><th>Answer</th><th>Correct?</th>";
     for (var i = 0; i < termFirst.length; i++) {
-      var tempHTML = "<tr><th>";
+      var tempHTML = "<tr><td>";
       tempHTML += termFirst[i];
-      tempHTML += "</th><input type='text' id='";
+      tempHTML += "</td><td><input type='text' id='";
       tempHTML += i;
-      tempHTML += "'></input></th><th></th></tr>";
+      tempHTML += "'></input></td><td></td><td></td></tr>";
       newHTML += tempHTML;
     }
     document.getElementById("quizTable").innerHTML = newHTML;
