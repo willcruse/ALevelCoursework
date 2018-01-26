@@ -3,7 +3,7 @@ window.onload = getSets();
 function getSets() {
     var uID = -1;
     var x = decodeURIComponent(document.cookie);
-    var split = x.split(";")
+    var split = x.split(";");
     var target = "uID=";
     for (var i = 0; i < split.length; i++) {
         var c = split[i];
@@ -27,11 +27,10 @@ function getSets() {
         var jsonSets = jsonResp.sets;
         if (jsonSets == null) {
             newHTML += "<tr><td><input id='setName' placeholder='setName'></input></td><td><button onclick='newSets();'>Add</button></td></tr>";
-            table.innerHTML = newHTML
+            table.innerHTML = newHTML;
             return;
         }
         for (var i = 0; i < jsonSets.length; i++) {
-            console.log("Run");
             var tempArr = jsonSets[i];
             var tempHTML = "</br><tr><td>";
             tempHTML += tempArr[1];
@@ -41,10 +40,10 @@ function getSets() {
             tempHTML += ");'>view</button></td>";
             tempHTML += "<td><button onclick='deleteSets(";
             tempHTML += tempArr[0];
-            tempHTML += ");'>Delete</button>"
+            tempHTML += ");'>Delete</button>";
             tempHTML += "<td><button onclick='quiz(";
             tempHTML += tempArr[0];
-            tempHTML += ");'>quiz!</button>"
+            tempHTML += ");'>quiz!</button>";
             newHTML += tempHTML;
         }
         newHTML += "<tr><td><input id='setName' placeholder='setName'></input></td><td><button onclick='newSets();'>Add</button></td></tr>";
@@ -121,7 +120,7 @@ function newTerms(id){
     obj.setID = id;
     var uID = -1;
     var x = decodeURIComponent(document.cookie);
-    var split = x.split(";")
+    var split = x.split(";");
     var target = "uID=";
     for (var i = 0; i < split.length; i++) {
         var c = split[i];
@@ -140,14 +139,14 @@ function newTerms(id){
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.onload = function() {
         view(id);
-    }
+    };
     xhr.send(json);
 }
 
 function newSets() {
     var uID = -1;
     var x = decodeURIComponent(document.cookie);
-    var split = x.split(";")
+    var split = x.split(";");
     var target = "uID=";
     for (var i = 0; i < split.length; i++) {
         var c = split[i];
@@ -165,9 +164,9 @@ function newSets() {
     var obj = new Object();
     obj.SetName = setName;
     obj.UID = uID;
-    var jsonObj = JSON.stringify(obj)
+    var jsonObj = JSON.stringify(obj);
     console.log("JSON ", jsonObj);
-    var xhr = new XMLHttpRequest()
+    var xhr = new XMLHttpRequest();
     xhr.open('POST', '/setsPage/newSets', true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.onload = function () {
@@ -195,7 +194,7 @@ function deleteSets(id) {
     var obj = new Object();
     obj.SetID = id;
     obj.UID = uID;
-    var jsonObj = JSON.stringify(obj)
+    var jsonObj = JSON.stringify(obj);
     console.log("JSON ", jsonObj);
     var xhr = new XMLHttpRequest()
     xhr.open('POST', '/setsPage/deleteSets', true);
@@ -209,11 +208,11 @@ function deleteSets(id) {
 function quiz(id) {
   var obj = new Object();
   obj.id = id;
-  var json = JSON.stringify(obj)
+  var json = JSON.stringify(obj);
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "/games/quizMove", true);
   xhr.onload = function (){
     console.log(xhr.responseText);
-  }
+  };
   xhr.send(json);
 }

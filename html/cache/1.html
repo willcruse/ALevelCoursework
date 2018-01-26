@@ -4,7 +4,7 @@
   <title>Quiz</title>
   <script src="/scripts/quiz.js"></script>
   <link rel="stylesheet" type="text/css" href="/css/style.css">
-  <script>window.onload = genQuiz({{.}});</script>
+  <script>window.onload = genQuiz(1);</script>
 </head>
 
 <body>
@@ -24,7 +24,7 @@
 
   <div id="body">
     <table id="quizTable"></table>
-    <button onclick="check({{.}})">Mark</button>
+    <button onclick="check( 1 )">Mark</button>
     <p id="infoP"></p>
   </div>
 </body>

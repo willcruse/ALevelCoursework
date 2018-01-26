@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/willcruse/ComputingCoursework/dbOperations"
+	"os"
+	"bufio"
 )
 
 //Main Function
@@ -39,6 +41,7 @@ func main() {
 	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
 	mux.HandleFunc("/games/quizMove", quizMove)
 	//Add path recognition to match URLs for static resources such as style sheets and js
+	mux.Handle("/html/cache/", http.StripPrefix("/html/cache/", http.FileServer(http.Dir("html/cache"))))
 	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	err := server.ListenAndServe() //Set the server to start listening
@@ -289,9 +292,20 @@ func quizMove(res http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&recS)
 	checkErr(err)
-	htmlTemplate, err := template.ParseFiles("html/quiz.html")
+	htmlTemplate := template.New("quiz")
+	htmlTemplate, err = template.ParseFiles("html/quiz.html")
 	checkErr(err)
-	htmlTemplate.Execute(res, recS.ID)
+	fileName := "html/cache/"
+	fileName += strconv.Itoa(recS.ID)
+	fileName += ".html"
+	file, err := os.Create(fileName)
+	checkErr(err)
+	writer := bufio.NewWriter(file)
+	err = htmlTemplate.Execute(writer, recS.ID)
+	checkErr(err)
+	writer.Flush()
+	file.Close()
+	http.Redirect(res, req, fileName, 302)
 }
 
 func teacherTools(res http.ResponseWriter, req *http.Request) {
