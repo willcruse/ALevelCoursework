@@ -213,6 +213,7 @@ function quiz(id) {
   xhr.open("POST", "/games/quizMove", true);
   xhr.onload = function (){
     console.log(xhr.responseText);
+    window.location = "/html/cache/" + id + ".html";
   };
   xhr.send(json);
 }

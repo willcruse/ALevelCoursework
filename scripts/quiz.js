@@ -1,7 +1,11 @@
 function genQuiz(id) {
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', '/game/getFirstTerm', true);
+  xhr.open('POST', '/games/getFirstTerm', true);
+  var obj = new Object();
+  obj.ID = id;
+  var json = JSON.stringify(obj)
   xhr.onload = function() {
+    console.log(xhr.responseText);
     var jsonRes = JSON.parse(xhr.responseText);
     var termFirst = jsonRes.term;
     var newHTML = "<tr><th>First<th><Second</th><th>Check</th><th>Answer</th><th>Correct?</th>";
@@ -15,7 +19,7 @@ function genQuiz(id) {
     }
     document.getElementById("quizTable").innerHTML = newHTML;
   }
-  xhr.send(id);
+  xhr.send(json);
 }
 
 function check(id){

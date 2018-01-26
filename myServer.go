@@ -40,6 +40,7 @@ func main() {
 	mux.HandleFunc("/teachertools/timer", timer)
 	mux.HandleFunc("/teachertools/stopwatch", stopWatch)
 	mux.HandleFunc("/games/quizMove", quizMove)
+	mux.HandleFunc("/games/getFirstTerm", getFirstTerm)
 	//Add path recognition to match URLs for static resources such as style sheets and js
 	mux.Handle("/html/cache/", http.StripPrefix("/html/cache/", http.FileServer(http.Dir("html/cache"))))
 	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
@@ -47,6 +48,7 @@ func main() {
 	err := server.ListenAndServe() //Set the server to start listening
 	checkErr(err)                  //Check that the server started up correctly
 }
+
 
 //Page Functions
 func homePage(res http.ResponseWriter, req *http.Request) {
@@ -305,7 +307,31 @@ func quizMove(res http.ResponseWriter, req *http.Request) {
 	checkErr(err)
 	writer.Flush()
 	file.Close()
-	http.Redirect(res, req, fileName, 302)
+	res.Write([]byte(":)")) //writes so the page knows to redirect
+}
+
+func getFirstTerm(res http.ResponseWriter, req *http.Request) {
+	type rec struct {
+		ID int
+	}
+	type send struct {
+		Term []string `json:"term"`
+	}
+	var recS rec
+	decoder := json.NewDecoder(req.Body)
+	err := decoder.Decode(&recS)
+	checkErr(err)
+	terms, err := dbOperations.GetTerms(recS.ID)
+	var termA []string
+	for _, value := range terms {
+		termA = append(termA, value[0])
+	}
+	log.Println("TermA ", termA)
+	sendS := send{termA}
+	json, err := json.Marshal(sendS)
+	res.Header().Set("Content-Type", "application/json")
+	res.Write(json) //Writes to client with the relevant headers
+	return
 }
 
 func teacherTools(res http.ResponseWriter, req *http.Request) {
