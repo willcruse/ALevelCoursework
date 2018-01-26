@@ -26,7 +26,6 @@ func main() {
 	//Add path recognition match URLs and assign them to relevant functions
 	mux.HandleFunc("/", homePage)
 	mux.HandleFunc("/setsPage", setsPage)
-	mux.HandleFunc("/termsPage", termsPage)
 	mux.HandleFunc("/loginPage", loginPage)
 	mux.HandleFunc("/signUpPage", signUpPage)
 	mux.HandleFunc("/teacherTools", teacherTools)
@@ -88,30 +87,6 @@ func setsPage(res http.ResponseWriter, req *http.Request) { //The function that 
 	return
 }
 
-func termsPage(res http.ResponseWriter, req *http.Request) { //makes new terms
-	if req.Method != "POST" { //Checks for POST
-		http.ServeFile(res, req, "html/termsPage.html")
-		return
-	}
-	type rec struct { //Makes new struct to recieve into
-		UID string
-	}
-	decoder := json.NewDecoder(req.Body) //New Decoder on the body of the request --> Decodes into rec struct --> Converts uID into int
-	var recS rec
-	err := decoder.Decode(&recS)
-	checkErr(err)
-	uID, err := strconv.Atoi(recS.UID)
-	checkErr(err)
-	if uID == -1 { //Checks to see if the user is logged in as default when getting the cookie on client side is to set uID to -1.
-		fmt.Println("Not logged in")
-		http.ServeFile(res, req, "html/signUpPage.html") //Redirects to sign up page
-	}
-	setName := req.FormValue("setName") //Gets the form values for the data
-	termA := req.FormValue("termA")
-	termB := req.FormValue("termB")
-	dbOperations.TermsExisting(termA, termB, setName, uID) //Inserts them into db
-	http.ServeFile(res, req, "html/termsPage.html")        //Serves term page
-}
 
 func loginPage(res http.ResponseWriter, req *http.Request) {
 	http.ServeFile(res, req, "html/loginPage.html") //Serves the client with the logingPage html file
@@ -355,8 +330,6 @@ func checkQuizRes(res http.ResponseWriter, req *http.Request){
 	for _, val := range terms {
 		termB = append(termB, val[1])
 	}
-	log.Println(termB)
-	log.Println("recS", recS)
 	for index, val := range termB {
 			log.Println("index", index)
 			if index < len(recS.Ans) {
@@ -367,7 +340,6 @@ func checkQuizRes(res http.ResponseWriter, req *http.Request){
 				}
 			}
 	}
-	log.Println(sendS)
 	json, err := json.Marshal(sendS)
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(json) //Writes to client with the relevant headers
