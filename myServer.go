@@ -182,7 +182,7 @@ func newSets(res http.ResponseWriter, req *http.Request) {
 	type send struct {
 		Succ int `json:"success"`
 	}
-	sendS := &send{suc} //Creates an isntance of the send struct that contains the success code
+	sendS := &send{suc} //Creates an instance of the send struct that contains the success code
 	json, err := json.Marshal(sendS)
 	checkErr(err)
 	res.Header().Set("Content-Type", "application/json")
@@ -265,57 +265,56 @@ func addTerms(res http.ResponseWriter, req *http.Request) {
 func quizMove(res http.ResponseWriter, req *http.Request) {
 	type rec struct {
 		ID int
-	}
+	} //struct to be received into
 	var recS rec
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&recS)
-	checkErr(err)
-	htmlTemplate := template.New("quiz")
-	htmlTemplate, err = template.ParseFiles("html/quiz.html")
+	checkErr(err) //Decodes json into recS
+	htmlTemplate := template.New("quiz") //makes a new template called quiz
+	htmlTemplate, err = template.ParseFiles("html/quiz.html") //parses the quiz template
 	checkErr(err)
 	fileName := "html/cache/"
 	fileName += strconv.Itoa(recS.ID)
-	fileName += ".html"
-	file, err := os.Create(fileName)
+	fileName += ".html" //Creates new HTML fileName for the template to be saved into with the setID as the fileName
+	file, err := os.Create(fileName) //Creates the file
 	checkErr(err)
-	writer := bufio.NewWriter(file)
-	err = htmlTemplate.Execute(writer, recS.ID)
+	writer := bufio.NewWriter(file) //New buffered writer to write into the file
+	err = htmlTemplate.Execute(writer, recS.ID) //Executes the template writing the result to the file
 	checkErr(err)
-	writer.Flush()
-	file.Close()
+	writer.Flush() //Flushes the writer to make sure it clear
+	file.Close() //Closes file
 	res.Write([]byte(":)")) //writes so the page knows to redirect
 }
 
 func getFirstTerm(res http.ResponseWriter, req *http.Request) {
 	type rec struct {
 		ID int
-	}
+	} //Struct to receive into
 	type send struct {
 		Term []string `json:"terms"`
-	}
+	} //Struct to send out of
 	var recS rec
-	decoder := json.NewDecoder(req.Body)
+	decoder := json.NewDecoder(req.Body) //new json decoder which decodes into an instance of rec struct
 	err := decoder.Decode(&recS)
 	checkErr(err)
-	terms, err := dbOperations.GetTerms(recS.ID)
+	terms, err := dbOperations.GetTerms(recS.ID) //Gets terms from appropriate set
 	var termA []string
 	for _, value := range terms {
-		termA = append(termA, value[0])
+		termA = append(termA, value[0]) //Gets first term value
 	}
-	sendS := send{termA}
-	json, err := json.Marshal(sendS)
+	sendS := send{termA} //Puts array into new instance of send Struct
+	json, err := json.Marshal(sendS) //Converts to json
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(json) //Writes to client with the relevant headers
 	return
 }
 
 func checkQuizRes(res http.ResponseWriter, req *http.Request){
-	log.Println("Run")
-	type rec struct {
+	type rec struct { //Struct to be received into
 		ID int
 		Ans []string
 	}
-	type send struct {
+	type send struct { //Struct to send from
 		Ans []string 	`json:"ansArr"`
 		Cor []bool		`json:"corArr"`
 		Score int 		`json:"score"`
@@ -323,24 +322,23 @@ func checkQuizRes(res http.ResponseWriter, req *http.Request){
 	var recS rec
 	var sendS send
 	decoder := json.NewDecoder(req.Body)
-	err := decoder.Decode(&recS)
+	err := decoder.Decode(&recS) //Creates new json decoder which decodes into an instance of rec Struct
 	checkErr(err)
-	terms, err := dbOperations.GetTerms(recS.ID)
+	terms, err := dbOperations.GetTerms(recS.ID) //Fetches terms with appropriate id
 	var termB []string
 	for _, val := range terms {
-		termB = append(termB, val[1])
+		termB = append(termB, val[1]) //Appends teh second terms to an array
 	}
 	for index, val := range termB {
-			log.Println("index", index)
-			if index < len(recS.Ans) {
-				sendS.Cor = append(sendS.Cor, val == recS.Ans[index])
-				sendS.Ans = append(sendS.Ans, val)
+			if index < len(recS.Ans) { //Checks that index is available in received array
+				sendS.Cor = append(sendS.Cor, val == recS.Ans[index]) //Appends whether the users anwser and the stored answer match
+				sendS.Ans = append(sendS.Ans, val) //Appends answer to ans struct
 				if val == recS.Ans[index] {
-					sendS.Score++
+					sendS.Score++ //Increments score if appropriate
 				}
 			}
 	}
-	json, err := json.Marshal(sendS)
+	json, err := json.Marshal(sendS) //Creates json from sendS struct
 	res.Header().Set("Content-Type", "application/json")
 	res.Write(json) //Writes to client with the relevant headers
 	return
@@ -360,6 +358,6 @@ func stopWatch(res http.ResponseWriter, req *http.Request) {
 
 func checkErr(e error) {
 	if e != nil {
-		log.Println(e)
+		log.Println(e) //Checks for error and if there is an error it prints with a timestamp
 	}
 }
