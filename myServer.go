@@ -367,7 +367,7 @@ func checkErr(e error) {
 }
 
 func getHash(text string) string {
-	h := crypto.SHA256.New()
-	h.Write([]byte(text))
-	return hex.EncodeToString(h.Sum(nil))
+	h := crypto.SHA256.New() //Creates new SHA256 hasher
+	h.Write([]byte(text)) //Hashes the pw
+	return hex.EncodeToString(h.Sum(nil)) //Returns the string version of the result
 }

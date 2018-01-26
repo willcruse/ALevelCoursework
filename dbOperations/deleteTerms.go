@@ -13,11 +13,10 @@ func DeleteTerms(setID int, terms []string) {
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
-	checkError(errCon)
+	checkError(errCon) //Connects to db and pings to ensure connection
 	stmt, err := db.Prepare("DELETE FROM terms WHERE (setID=? AND term1=? AND term2=?)")
 	checkError(err)
-	log.Println("Terms Array: ", terms)
-	res, err := stmt.Exec(setID, terms[0], terms[1])
+	res, err := stmt.Exec(setID, terms[0], terms[1]) //Deletes the terms from the db
 	checkError(err)
 	log.Println(res)
 }

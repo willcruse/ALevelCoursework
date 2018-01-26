@@ -11,15 +11,15 @@ func DeleteSets(setID, uID int) {
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
-	checkError(errCon)
+	checkError(errCon) //Connects to db and pings to ensure connected
 	stmt, err := db.Prepare("DELETE FROM terms WHERE (setID=?)")
 	checkError(err)
-	res, err := stmt.Exec(setID)
+	res, err := stmt.Exec(setID) //Deletes all terms with setID supplied
 	checkError(err)
 	log.Println(res.RowsAffected())
 	stmt2, err := db.Prepare("DELETE FROM cards WHERE (setID=? AND userOwn=?)")
 	checkError(err)
-	res, err = stmt2.Exec(setID, uID)
+	res, err = stmt2.Exec(setID, uID) //Deletes all sets with setID and userOwn as supplied
 	checkError(err)
 	log.Println(res.RowsAffected())
 	return

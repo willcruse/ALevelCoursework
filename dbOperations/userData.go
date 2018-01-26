@@ -13,11 +13,11 @@ func userDataUID(uID int) []string {
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
-	checkError(errCon)
-	rows, err := db.Query("SELECT email, uName, pw FROM users WHERE uID=?", uID)
+	checkError(errCon) //Connects to db and pings to ensure connection
+	rows, err := db.Query("SELECT uName, pw FROM users WHERE uID=?", uID) //Queries for the user data
 	checkError(err)
 	var data []string
-	for rows.Next() {
+	for rows.Next() { //Extracts the user data
 		var uName string
 		var email string
 		var pw string
@@ -38,23 +38,20 @@ func UserDataUname(uName string) (string, int) {
 	checkError(err)
 	defer db.Close()
 	errCon := db.Ping()
-	checkError(errCon)
-	rows, err := db.Query("SELECT uID, pw FROM users WHERE uName=?", uName)
-	if err == sql.ErrNoRows {
+	checkError(errCon) //Connects to db and pings to ensure connection
+	rows, err := db.Query("SELECT uID, pw FROM users WHERE uName=?", uName) //Queries for the user Data
+	if err == sql.ErrNoRows { //Checks to see if rows were returned
 		fmt.Println("No rows")
 		return pw, uID
 	}
-	if err != nil {
-		checkError(err)
-	}
+	checkError(err) //Checks for error
 	defer rows.Close()
-	for rows.Next() {
+	for rows.Next() { //Extracts data from rows
 		var uIDl int
 		var pwl string
 		err = rows.Scan(&uIDl, &pwl)
 		checkError(err)
 		return pwl, uIDl
 	}
-
 	return pw, uID
 }
