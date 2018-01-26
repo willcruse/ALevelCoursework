@@ -8,3 +8,5 @@ debug
 \.idea/workspace\.xml
 
 *.xml
+
+html/cache/
