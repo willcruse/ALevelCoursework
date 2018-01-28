@@ -35,11 +35,12 @@ func checkTaken(uName string) bool {
 	defer db.Close()
 	errCon := db.Ping() //standard db setup
 	checkError(errCon)
-	checkError(err)
 	rows, err := db.Query("SELECT * FROM users WHERE uName=?", uName) //Query for uname
 	defer rows.Close()
-	if err == sql.ErrNoRows {
-		return false //If no rows return false
+	checkError(err)
+	var count int
+	for rows.Next() {
+		count++
 	}
-	return true //Else means uname already exists
+	return count > 0
 }
