@@ -18,7 +18,9 @@ func NewUser(uName, pw string) int {
 	defer db.Close()
 	errCon := db.Ping() //Setup db connection
 	checkError(errCon)
-	checkError(err)
+	if checkTaken(uName) {
+		return 0
+	}
 	stmt, err := db.Prepare("INSERT INTO users (uName, pw) VALUES(?, ?)") //Insert uname and pw
 	checkError(err)
 	res, err := stmt.Exec(uName, pw) //Exec and check err and resp
@@ -42,5 +44,5 @@ func checkTaken(uName string) bool {
 	if err != sql.ErrNoRows {
 		return false //If no rows return false
 	}
-	return true //Else means uname already exitsts
+	return true //Else means uname already exists
 }

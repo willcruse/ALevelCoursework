@@ -146,11 +146,11 @@ func signUp(res http.ResponseWriter, req *http.Request) {
 		pwHash string
 	}
 	var recS rec
-	decoder := json.NewDecoder(req.Body) //Creates a new decoder then decoded the recieved data into it
+	decoder := json.NewDecoder(req.Body) //Creates a new decoder then decoded the received data into it
 	err := decoder.Decode(&recS)
 	checkErr(err)
 	recS.pwHash = getHash(recS.PW)
-	resp := dbOperations.NewUser(recS.UName, recS.pwHash) //Inserts a new user into the db with the revieved data
+	resp := dbOperations.NewUser(recS.UName, recS.pwHash) //Inserts a new user into the db with the received data
 	type resS struct {                                //Defines a new struct for the success code
 		Succ int `json:"success"`
 	}
