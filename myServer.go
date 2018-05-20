@@ -112,11 +112,10 @@ func login(res http.ResponseWriter, req *http.Request) {
 	var recS rec
 	err := decoder.Decode(&recS) //Decodes the json into an instance of the rec struct
 	checkErr(err)
-	uName := recS.UName //Gets uName and pw out of rec struct
 	recS.pwHash = getHash(recS.Pw)
 	var pwR string
 	var uID int
-	pwR, uID = dbOperations.UserDataUname(uName) //Fetches UserData linked to that username and returns the pw and uID linked to that user
+	pwR, uID = dbOperations.UserDataUname(recS.UName) //Fetches UserData linked to that username and returns the pw and uID linked to that user
 	if pwR == "notFound" {                       //incorrect userName
 		loginSuccess = 0
 		fmt.Println("notFound")
